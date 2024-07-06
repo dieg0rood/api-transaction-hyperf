@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\DTO\UserDTO;
@@ -12,9 +14,7 @@ class WalletService
     const LOCK_FOR_UPDATE = true;
     public function __construct(
         private readonly WalletRepositoryInterface $walletRepository
-    )
-    {
-    }
+    ){}
 
     public function withdraw(UserDTO $user, Amount $amount): bool
     {

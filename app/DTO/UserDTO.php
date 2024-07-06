@@ -1,7 +1,8 @@
 <?php
 
-namespace App\DTO;
+declare(strict_types=1);
 
+namespace App\DTO;
 
 readonly class UserDTO {
     private function __construct(

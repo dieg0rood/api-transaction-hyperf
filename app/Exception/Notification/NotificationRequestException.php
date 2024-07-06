@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exception\Notification;
 
 use App\Enum\ApplicationErrorCodesEnum;
 use App\Exception\ApplicationException;
-use Swoole\Http\Status;
 
 class NotificationRequestException extends ApplicationException
 {

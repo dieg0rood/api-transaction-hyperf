@@ -1,19 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ExternalServices\Request\TransactionAuth;
 
 use App\Exception\ApplicationException;
 use App\Exception\Auth\AuthRequestException;
 use App\Exception\Auth\TransactionUnauthorizedException;
 use App\ExternalServices\Request\AbstractRequest;
-use App\Helper\Logger;
 use GuzzleHttp\Exception\GuzzleException;
+use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
 
 class TransactionAuthRequest extends AbstractRequest
 {
     const SERVICE_URI = '5794d450-d2e2-4412-8131-73d0293ac1cc';
     const AUTHORIZED_MESSAGE = 'Autorizado';
+
+    public function __construct(private Logger $logger){}
 
     public function auth(): ResponseInterface|ApplicationException
     {
@@ -26,7 +30,7 @@ class TransactionAuthRequest extends AbstractRequest
             }
             throw new TransactionUnauthorizedException();
         } catch (GuzzleException $e) {
-            Logger::instanciate()->error($e->getMessage());
+            $this->logger->error($e->getMessage());
             throw new AuthRequestException();
         }
     }

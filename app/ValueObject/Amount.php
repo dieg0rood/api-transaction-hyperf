@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ValueObject;
 
 use App\Exception\General\InvalidAmountFormatException;
@@ -19,7 +21,7 @@ class Amount
         }
         $amount = $amount * 100;
 
-        return new Amount($amount);
+        return new Amount((int)$amount);
     }
 
     public static function fromInteger($amount): Amount
@@ -37,10 +39,10 @@ class Amount
 
     public function toFloat(): float
     {
-        return number_format($this->amount, 2, '.', '');
+        return (float)number_format($this->amount, 2, '.', '');
     }
 
-    public function toMoney(): float
+    public function toMoney(): string
     {
         return number_format($this->amount, 2, ',', '.');
     }

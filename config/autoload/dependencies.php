@@ -15,7 +15,5 @@ return [
     UserRepositoryInterface::class          => UserRepository::class,
     WalletRepositoryInterface::class        => WalletRepository::class,
     TransactionRepositoryInterface::class   => TransactionRepository::class,
-    RepositoryInterface::class              => Repository::class,
-    AuthorizerProviderInterface::class      => TransactionAuthorizerService::class,
-    NotificationProviderInterface::class    => NotificationService::class,
+    RepositoryInterface::class              => Repository::class
 ];

@@ -5,9 +5,6 @@ ARG timezone
 ENV TIMEZONE=${timezone:-"America/Sao_Paulo"} \
     SCAN_CACHEABLE=(true)
 
-RUN apk update && apk add --no-cache supervisor
-RUN apk update && apk add --no-cache zip unzip curl openssh-client wget git
-
 RUN set -ex \
     && php --ri swoole \
     && cd /etc/php* \
@@ -21,12 +18,10 @@ RUN set -ex \
     && echo "${TIMEZONE}" > /etc/timezone \
     && rm -rf /var/cache/apk/* /tmp/* /usr/share/man
 
-COPY ./supervisor.conf /etc/supervisord.conf
 
 WORKDIR /var/www
 COPY . /var/www
 
-RUN composer install --no-dev -o && php bin/hyperf.php -v
-EXPOSE 9501
+RUN composer install --no-dev -o && php bin/hyperf.php
 
-ENTRYPOINT ["/bin/sh", "-c" , "php bin/hyperf.php migrate --force && /usr/bin/supervisord -c /etc/supervisord.conf"]
+EXPOSE 9501

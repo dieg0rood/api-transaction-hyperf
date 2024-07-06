@@ -11,18 +11,16 @@ use Hyperf\DbConnection\Db;
 
 class TransactionRepository extends Repository implements TransactionRepositoryInterface
 {
-    public function __construct(
-        private Model $transactionModel, Db $database
-    ){
+    public function __construct(private Model $transactionModel, Db $database){
         parent::__construct($database);
     }
 
     public function create(UserDTO $sender, UserDTO $receiver, Amount $amount): TransactionDTO
     {
         $transaction = $this->transactionModel->create([
-            'sender_id' => $sender->getId(),
-            'receiver_id' => $receiver->getId(),
-            'value' => $amount->toInt()
+            'sender_id'     => $sender->getId(),
+            'receiver_id'   => $receiver->getId(),
+            'value'         => $amount->toInt()
         ]);
         return TransactionDTO::create(
             id:             $transaction->id,

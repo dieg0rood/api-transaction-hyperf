@@ -25,8 +25,8 @@ class TransferTest extends AbstractTest
             'payer' => $this->sender->id,
             'payee' => $this->receiver->id,
         ];
-        var_dump($this->post('/transfer', $body));
-        $this->getData($this->post('/transfer', $body));
+        $response = $this->getData($this->post('/transfer', $body));
+        var_dump($response);
     }
 
 }

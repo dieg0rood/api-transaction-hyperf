@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
-use App\DTO\UserDTO;
 use App\DTO\WalletDTO;
 use App\Interface\Repository\WalletRepositoryInterface;
 use App\Model\Wallet;

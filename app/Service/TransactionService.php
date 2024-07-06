@@ -13,8 +13,7 @@ class TransactionService
 {
     public function __construct(
         private readonly TransactionRepositoryInterface $repository,
-    )
-    {}
+    ){}
 
     public function create(UserDTO $sender, UserDTO $receiver, Amount $amount): TransactionDTO
     {

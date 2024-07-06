@@ -18,9 +18,6 @@ class TransferRequest extends FormRequest implements TransactionRequestInterface
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
     public function rules(): array
     {
         return [

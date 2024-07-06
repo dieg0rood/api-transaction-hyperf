@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
-use App\DTO\TransactionDTO;
 use App\DTO\UserDTO;
 use App\Enum\UserTypesEnum;
 use App\Exception\ApplicationException;
@@ -26,9 +27,7 @@ class TransferService
         private WalletService           $walletService,
         private TransactionService      $transactionService,
         private NotificationService     $notificationService
-    )
-    {
-    }
+    ){}
 
     public function handleTransfer(Amount $amount, string $senderId, string $receiverId): TransferResource
     {
