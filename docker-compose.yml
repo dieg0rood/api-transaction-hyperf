@@ -14,7 +14,7 @@ services:
       - ./:/var/www/
     ports:
       - "9599:9501"
-#    entrypoint: bash -c "/usr/bin/supervisord -c /etc/supervisord.conf"
+    entrypoint: bash -c "/usr/bin/supervisord -c /etc/supervisord.conf"
     environment:
       - PHP_IDE_CONFIG=serverName=${APP_NAME}
     depends_on:

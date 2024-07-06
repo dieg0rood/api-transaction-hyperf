@@ -21,6 +21,7 @@ class TransferController
 
     public function transfer (TransferRequest $request): HttpResponseInterface
     {
+        return $this->response->withStatus(Status::BAD_REQUEST);
         $transaction = $this->service->handleTransfer(
             $request->getTransactionValue(),
             $request->getSenderId(),
