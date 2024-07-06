@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Exception\User;
 
-use App\Enum\ApplicationErrorCodesEnum;
-use App\Exception\ApplicationException;
-use Swoole\Http\Status;
+use Hyperf\HttpMessage\Exception\ForbiddenHttpException;
 
-class EnterpriseUserCannotBePayerException extends ApplicationException
+class EnterpriseUserCannotBePayerException extends ForbiddenHttpException
 {
     public function __construct()
     {
-        parent::__construct(ApplicationErrorCodesEnum::EnterpriseUserCannotBePayer, Status::UNPROCESSABLE_ENTITY);
+        parent::__construct('Enterprise User Cannot Be Payer');
     }
 }

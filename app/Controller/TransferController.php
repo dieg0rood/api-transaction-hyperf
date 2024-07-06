@@ -26,7 +26,7 @@ class TransferController
             $request->getSenderId(),
             $request->getReceiverId()
         );
-        return $this->response->withStatus(Status::CREATED);
-//        return $transaction->toResponse()->withStatus(Status::CREATED);
+
+        return $transaction->toResponse()->withStatus(Status::CREATED);
     }
 }

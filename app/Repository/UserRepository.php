@@ -19,7 +19,8 @@ class UserRepository extends Repository implements UserRepositoryInterface
 
     public function findOrFail(string $userId): ?UserDTO
     {
-        $user = $this->userModel->findOrFail($userId)->first();
+        $user = $this->userModel->findOrFail($userId)->fresh();
+
         return UserDTO::create(
             id:         $user->id,
             full_name:  $user->full_name,

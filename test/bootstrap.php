@@ -25,9 +25,7 @@ $container = require BASE_PATH . '/config/container.php';
 
 $config = $container->get(ConfigInterface::class);
 
-if ($config->get('app_env') !== 'pipeline') {
-    $config->set('databases.default.database', 'testing');
-}
+$config->set('databases.default.database', 'testing');
 
 $config->set('logger.default', []);
 

@@ -39,7 +39,7 @@ class Amount
 
     public function toFloat(): float
     {
-        return (float)number_format($this->amount, 2, '.', '');
+        return (float)number_format($this->amount/100, 2, '.', '');
     }
 
     public function toMoney(): string

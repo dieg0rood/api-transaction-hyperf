@@ -8,7 +8,6 @@ use App\DTO\WalletDTO;
 use App\Interface\Repository\WalletRepositoryInterface;
 use App\Model\Wallet;
 use App\ValueObject\Amount;
-use Hyperf\Database\Query\Builder;
 use Hyperf\DbConnection\Db;
 
 class WalletRepository extends Repository implements WalletRepositoryInterface
@@ -18,17 +17,12 @@ class WalletRepository extends Repository implements WalletRepositoryInterface
         parent::__construct($database);
     }
 
-    private function getLockForUpdate(): Builder
-    {
-        return $this->walletModel::lockForUpdate();
-    }
-
     public function getByUserId(string $userId, $lockForUpdate = false): ?WalletDTO
     {
         $model = $this->walletModel;
 
         if ($lockForUpdate) {
-            $model = $this->getLockForUpdate();
+            $model = $this->walletModel::lockForUpdate();
         }
 
         $wallet = $model->where('user_id', $userId)->first();

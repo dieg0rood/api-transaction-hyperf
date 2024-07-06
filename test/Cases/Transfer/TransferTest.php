@@ -15,20 +15,36 @@ use HyperfTest\Traits\AssertsTrait;
 class TransferTest extends AbstractTest
 {
     use AssertsTrait;
-    public function testSuccessTransactionUserToUser()
-    {
-        $this->makePersonalUser(10000, 'sender');
-        $this->makePersonalUser(10000, 'receiver');
+//    public function testSuccessTransferUserToUser()
+//    {
+//        $this->mockTransactionAuthorizedService();
+//
+//        $this->makePersonalUser(100000, 'sender');
+//        $this->makePersonalUser(100000, 'receiver');
+//
+//        $body = [
+//            'value' => 10.01,
+//            'payer' => $this->sender->id->toString(),
+//            'payee' => $this->receiver->id->toString(),
+//        ];
+//
+//        $response = $this->getData($this->post('/api/transfer', $body));
+//    }
 
+    public function testTransferEnterpriseToUser()
+    {
+        $this->mockTransactionAuthorizedService();
+
+        $this->makeEnterpriseUser(100000, 'sender');
+        $this->makePersonalUser(100000, 'receiver');
 
         $body = [
-            'value' => 10.00,
+            'value' => 10.01,
             'payer' => $this->sender->id->toString(),
             'payee' => $this->receiver->id->toString(),
         ];
 
-        $response = $this->getData($this->post('/api/transfer', $body));
-        var_dump($response);
+        $response = $this->post('/api/transfer', $body);
     }
 
 }

@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Exception\Wallet;
 
-use App\Enum\ApplicationErrorCodesEnum;
-use App\Exception\ApplicationException;
-use Swoole\Http\Status;
+use Exception;
 
-class InsufficientWalletAmountException extends ApplicationException
+class InsufficientWalletAmountException extends Exception
 {
     public function __construct()
     {
-        parent::__construct(ApplicationErrorCodesEnum::InsufficientWalletAmount, Status::UNPROCESSABLE_ENTITY);
+        parent::__construct('Insufficient Wallet Balance');
     }
 }

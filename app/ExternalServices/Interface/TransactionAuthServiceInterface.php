@@ -9,5 +9,5 @@ use Psr\Http\Message\ResponseInterface;
 
 interface TransactionAuthServiceInterface
 {
-    public function auth(): ApplicationException|ResponseInterface;
+    public function auth(): bool;
 }

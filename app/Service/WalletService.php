@@ -19,9 +19,10 @@ class WalletService
     public function withdraw(UserDTO $user, Amount $amount): bool
     {
         $wallet = $this->walletRepository->getByUserId($user->getId(), self::LOCK_FOR_UPDATE);
-        $balance = $amount->subtract($wallet->getAmount());
+        $balance = $wallet->getAmount()->subtract($amount);
 
         if ($balance->isNegative()) {
+            var_dump('toaq');
             throw new InsufficientWalletAmountException();
         }
 
@@ -30,7 +31,7 @@ class WalletService
     public function deposit(UserDTO $user, Amount $amount): bool
     {
         $wallet = $this->walletRepository->getByUserId($user->getId(), self::LOCK_FOR_UPDATE);
-        $balance = $amount->sum($wallet->getAmount());
+        $balance = $wallet->getAmount()->sum($amount);
 
         return $this->walletRepository->updateBalance($wallet, $balance);
     }

@@ -6,19 +6,19 @@ namespace HyperfTest\Cases;
 
 use App\Database\Schema;
 use App\Enum\UserTypesEnum;
-use App\ExternalServices\Service\TransactionAuth\TransactionAuthService;
+use App\ExternalServices\Interface\NotificationServiceInterface;
+use App\ExternalServices\Interface\TransactionAuthServiceInterface;
 use App\Model\User;
 use App\Model\Wallet;
-use Hyperf\Context\ApplicationContext;
+use Hyperf\Utils\ApplicationContext;
 use Hyperf\DbConnection\Db;
-use Hyperf\Event\EventDispatcher;
 use Hyperf\Testing\TestCase;
 use HyperfTest\Traits\ExpectsTrait;
 use Faker\Generator;
 use Faker\Factory;
 use Hyperf\Database\Model\Factory as FactoryModel;
 use Mockery;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Swoole\Http\Status;
 
 /**
  * @internal
@@ -40,14 +40,17 @@ abstract class AbstractTest extends TestCase
     public function setUp(): void
     {
         $this->truncateDatabase();
-        $this->mockEventDispatcher();
+        $this->mockNotifyService();
         $this->faker = Factory::create();
     }
 
     private function truncateDatabase(): void
     {
         Schema::disableForeignKeyConstraints();
-        $table = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
+        $table = Schema::getConnection()
+            ->getDoctrineSchemaManager()
+            ->listTableNames();
+
         foreach ($table as $name) {
             if ($name == 'migrations') {
                 continue;
@@ -57,19 +60,19 @@ abstract class AbstractTest extends TestCase
         Schema::enableForeignKeyConstraints();
     }
 
-    protected function makePersonalUser($amount, $function): void
+    protected function makePersonalUser($walletBalance, $function): void
     {
         $user = $this->factory(User::class);
 
         $this->factory(Wallet::class, [
             'user_id' => $user->id,
-            'amount' => $amount
+            'amount' => $walletBalance
         ]);
 
         $function === 'sender' ? $this->sender = $user : $this->receiver = $user;
     }
 
-    protected function makeEnterpriseUser($amount, $function): void
+    protected function makeEnterpriseUser($walletBalance, $function): void
     {
         $user = $this->factory(User::class, [
             'type' => UserTypesEnum::Enterprise->value
@@ -77,7 +80,7 @@ abstract class AbstractTest extends TestCase
 
         $this->factory(Wallet::class, [
             'user_id' => $user->id,
-            'amount' => $amount
+            'amount' => $walletBalance
         ]);
 
         $function === 'sender' ? $this->sender = $user : $this->receiver = $user;
@@ -90,29 +93,38 @@ abstract class AbstractTest extends TestCase
         return $factory->of($class)->create($data);
     }
 
-    private function mockEventDispatcher(): void
+    protected function mockTransactionAuthorizedService(bool $return = true): void
     {
-        $mock = Mockery::mock(EventDispatcherInterface::class)
-            ->shouldReceive('dispatch')
-            ->andReturn()
-            ->getMock()
-            ->makePartial();
-
-        ApplicationContext::getContainer()->define(
-            EventDispatcher::class,
-            $mock
-        );
-    }
-
-    private function mockTransactionAuthorizedService(bool $return = true): void
-    {
-        $mock = Mockery::mock(TransactionAuthService::class)
+        $mock = Mockery::mock(TransactionAuthServiceInterface::class)
             ->shouldReceive('auth')
             ->andReturn($return);
 
-        ApplicationContext::getContainer()->define(
-            TransactionAuthService::class,
+        $container = ApplicationContext::getContainer();
+        $container->define(
+            TransactionAuthServiceInterface::class,
             fn() => $mock->getMock()->makePartial(),
         );
+    }
+
+    protected function mockNotifyService(): void
+    {
+        $mock = Mockery::mock(NotificationServiceInterface::class)
+            ->shouldReceive('notifyTransfer')
+            ->andReturnNull();
+
+        $container = ApplicationContext::getContainer();
+        $container->define(
+            NotificationServiceInterface::class,
+            fn() => $mock->getMock()->makePartial(),
+        );
+    }
+
+    public function expectExceptionTest(array $response, $expectedErrorMessage = 'Generic Error', int $expectedStatusCode = Status::INTERNAL_SERVER_ERROR): void
+    {
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('code', $response);
+        $this->assertArrayHasKey('message', $response);
+        $this->assertEquals($response['code'], $expectedStatusCode);
+        $this->assertEquals($response['message'], $expectedErrorMessage);
     }
 }

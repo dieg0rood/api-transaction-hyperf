@@ -7,10 +7,10 @@ namespace App\Service;
 use App\DTO\UserDTO;
 use App\Enum\UserTypesEnum;
 use App\Exception\ApplicationException;
-use App\Exception\Auth\AuthRequestException;
 use App\Exception\Auth\TransactionUnauthorizedException;
 use App\Exception\Transaction\TransactionToYourselfException;
 use App\Exception\User\EnterpriseUserCannotBePayerException;
+use App\Exception\Wallet\InsufficientWalletAmountException;
 use App\ExternalServices\Interface\NotificationServiceInterface;
 use App\ExternalServices\Interface\TransactionAuthServiceInterface;
 use App\Interface\Repository\RepositoryInterface;
@@ -31,12 +31,11 @@ class TransferService
 
     public function handleTransfer(Amount $amount, string $senderId, string $receiverId): TransferResource
     {
-        $this->authService->auth();
-
         $sender     = $this->userRepository->findOrFail($senderId);
         $receiver   = $this->userRepository->findOrFail($receiverId);
 
         if ($sender->getType() === UserTypesEnum::Enterprise->value) {
+            var_dump('toaq');
             throw new EnterpriseUserCannotBePayerException();
         }
 
@@ -47,7 +46,11 @@ class TransferService
         $this->makeTransfer($sender, $receiver, $amount);
         $this->notificationService->notifyTransfer($sender, $receiver, $amount);
 
-        return TransferResource::make($sender, $receiver, $amount);
+        return TransferResource::make([
+            'sender' => $sender,
+            'receiver' => $receiver,
+            'amount' =>$amount
+        ]);
     }
 
     private function makeTransfer(UserDTO $sender, UserDTO $receiver, Amount $amount): void
@@ -57,10 +60,15 @@ class TransferService
 
             $this->walletService->withdraw($sender, $amount);
             $this->walletService->deposit($receiver, $amount);
+
             $this->transactionService->create($sender, $receiver, $amount);
 
+            if (!$this->authService->auth()) {
+                throw new TransactionUnauthorizedException();
+            }
+
             $this->repository->commit();
-        } catch (AuthRequestException|TransactionUnauthorizedException $e) {
+        } catch (TransactionUnauthorizedException|InsufficientWalletAmountException $e) {
             $this->repository->rollback();
             throw $e;
         } catch (\Exception $e) {
