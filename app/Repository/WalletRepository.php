@@ -13,10 +13,8 @@ use Hyperf\DbConnection\Db;
 
 class WalletRepository extends Repository implements WalletRepositoryInterface
 {
-    public function __construct(
-        private Wallet $walletModel,
-        Db $database
-    ){
+    public function __construct(private Wallet $walletModel, Db $database)
+    {
         parent::__construct($database);
     }
 

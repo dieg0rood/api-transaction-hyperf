@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\ExternalServices\Interface\NotificationServiceInterface;
+use App\ExternalServices\Interface\TransactionAuthServiceInterface;
+use App\ExternalServices\Service\Notification\NotificationService;
+use App\ExternalServices\Service\TransactionAuth\TransactionAuthService;
 use App\Interface\Repository\RepositoryInterface;
 use App\Interface\Repository\TransactionRepositoryInterface;
 use App\Interface\Repository\UserRepositoryInterface;
@@ -15,5 +19,7 @@ return [
     UserRepositoryInterface::class          => UserRepository::class,
     WalletRepositoryInterface::class        => WalletRepository::class,
     TransactionRepositoryInterface::class   => TransactionRepository::class,
-    RepositoryInterface::class              => Repository::class
+    RepositoryInterface::class              => Repository::class,
+    TransactionAuthServiceInterface::class  => TransactionAuthService::class,
+    NotificationServiceInterface::class     => NotificationService::class,
 ];

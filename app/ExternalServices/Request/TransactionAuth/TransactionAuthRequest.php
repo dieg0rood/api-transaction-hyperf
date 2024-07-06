@@ -9,7 +9,7 @@ use App\Exception\Auth\AuthRequestException;
 use App\Exception\Auth\TransactionUnauthorizedException;
 use App\ExternalServices\Request\AbstractRequest;
 use GuzzleHttp\Exception\GuzzleException;
-use Monolog\Logger;
+use Hyperf\Contract\StdoutLoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class TransactionAuthRequest extends AbstractRequest
@@ -17,7 +17,7 @@ class TransactionAuthRequest extends AbstractRequest
     const SERVICE_URI = '5794d450-d2e2-4412-8131-73d0293ac1cc';
     const AUTHORIZED_MESSAGE = 'Autorizado';
 
-    public function __construct(private Logger $logger){}
+    public function __construct(private StdoutLoggerInterface $logger){}
 
     public function auth(): ResponseInterface|ApplicationException
     {

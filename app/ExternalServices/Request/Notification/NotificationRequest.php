@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\ExternalServices\Request\Notification;
 
-use App\Exception\Notification\NotificationRequestException;
 use App\ExternalServices\Request\AbstractRequest;
-use Monolog\Logger;
+use Hyperf\Contract\StdoutLoggerInterface;
 
 class NotificationRequest extends AbstractRequest
 {
@@ -14,7 +13,7 @@ class NotificationRequest extends AbstractRequest
 
     const AUTHORIZED_MESSAGE = 'Autorizado';
 
-    public function __construct(private Logger $logger){}
+    public function __construct(private StdoutLoggerInterface $logger){}
 
     public function notify($params): void
     {

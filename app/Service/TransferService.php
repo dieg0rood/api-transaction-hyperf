@@ -11,8 +11,8 @@ use App\Exception\Auth\AuthRequestException;
 use App\Exception\Auth\TransactionUnauthorizedException;
 use App\Exception\Transaction\TransactionToYourselfException;
 use App\Exception\User\EnterpriseUserCannotBePayerException;
-use App\ExternalServices\Service\Notification\NotificationService;
-use App\ExternalServices\Service\TransactionAuth\TransactionAuthService;
+use App\ExternalServices\Interface\NotificationServiceInterface;
+use App\ExternalServices\Interface\TransactionAuthServiceInterface;
 use App\Interface\Repository\RepositoryInterface;
 use App\Repository\UserRepository;
 use App\Resource\TransferResource;
@@ -21,12 +21,12 @@ use App\ValueObject\Amount;
 class TransferService
 {
     public function __construct(
-        private UserRepository          $userRepository,
-        private TransactionAuthService  $authService,
-        private RepositoryInterface     $repository,
-        private WalletService           $walletService,
-        private TransactionService      $transactionService,
-        private NotificationService     $notificationService
+        private UserRepository                  $userRepository,
+        private TransactionAuthServiceInterface $authService,
+        private RepositoryInterface             $repository,
+        private WalletService                   $walletService,
+        private TransactionService              $transactionService,
+        private NotificationServiceInterface    $notificationService
     ){}
 
     public function handleTransfer(Amount $amount, string $senderId, string $receiverId): TransferResource

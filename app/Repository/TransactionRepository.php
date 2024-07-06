@@ -5,13 +5,14 @@ namespace App\Repository;
 use App\DTO\TransactionDTO;
 use App\DTO\UserDTO;
 use App\Interface\Repository\TransactionRepositoryInterface;
-use App\Model\Model;
+use App\Model\Transaction;
 use App\ValueObject\Amount;
 use Hyperf\DbConnection\Db;
 
 class TransactionRepository extends Repository implements TransactionRepositoryInterface
 {
-    public function __construct(private Model $transactionModel, Db $database){
+    public function __construct(private Transaction $transactionModel, Db $database)
+    {
         parent::__construct($database);
     }
 

@@ -6,10 +6,11 @@ namespace App\ExternalServices\Service\Notification;
 
 use App\DTO\UserDTO;
 use App\Enum\TransactionNotificationEnum;
+use App\ExternalServices\Interface\NotificationServiceInterface;
 use App\ExternalServices\Request\Notification\NotificationRequest;
 use App\ValueObject\Amount;
 
-class NotificationService
+class NotificationService implements NotificationServiceInterface
 {
     public function __construct(private NotificationRequest $request){}
 

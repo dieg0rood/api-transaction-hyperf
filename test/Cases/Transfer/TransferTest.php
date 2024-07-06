@@ -20,12 +20,14 @@ class TransferTest extends AbstractTest
         $this->makePersonalUser(10000, 'sender');
         $this->makePersonalUser(10000, 'receiver');
 
+
         $body = [
             'value' => 10.00,
-            'payer' => $this->sender->id,
-            'payee' => $this->receiver->id,
+            'payer' => $this->sender->id->toString(),
+            'payee' => $this->receiver->id->toString(),
         ];
-        $response = $this->getData($this->post('/transfer', $body));
+
+        $response = $this->getData($this->post('/api/transfer', $body));
         var_dump($response);
     }
 
