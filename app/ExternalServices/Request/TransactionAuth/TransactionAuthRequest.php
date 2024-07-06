@@ -11,21 +11,21 @@ use App\ExternalServices\Request\AbstractRequest;
 use GuzzleHttp\Exception\GuzzleException;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Psr\Http\Message\ResponseInterface;
+use function Hyperf\Config\config;
 
 class TransactionAuthRequest extends AbstractRequest
 {
-    const SERVICE_URI = '5794d450-d2e2-4412-8131-73d0293ac1cc';
-    const AUTHORIZED_MESSAGE = 'Autorizado';
+    const SERVICE_ROUTE = 'authorize';
 
     public function __construct(private StdoutLoggerInterface $logger){}
 
     public function auth(): ResponseInterface|ApplicationException
     {
         try {
-            $auth = $this->getClient()->get(self::SERVICE_URI);
+            $auth = $this->getClient(config('auth_service_uri'))->get(self::SERVICE_ROUTE);
             $decodedResponse = json_decode($auth->getBody()->getContents(), true);
 
-            if ($decodedResponse['message'] === self::AUTHORIZED_MESSAGE) {
+            if ($decodedResponse['data']['authorization']) {
                 return $auth;
             }
             throw new TransactionUnauthorizedException();
