@@ -1,0 +1,284 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Transactions Hyperf",
+    "description": "Operação de transação de forma simplificada",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9599"
+    }
+  ],
+  "paths": {
+    "/transfer": {
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Realizar Transação",
+        "description": "Realiza a transação com autenticação externa para envio de emails e para a transação em si",
+        "operationId": "fb973237eceea3f148d6703c88ec11ac",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "value",
+                  "payer",
+                  "payee"
+                ],
+                "properties": {
+                  "value": {
+                    "description": "Valor da transação",
+                    "type": "number",
+                    "example": "100.00"
+                  },
+                  "payer": {
+                    "description": "Código Uuid do pagador",
+                    "type": "string",
+                    "example": "faf77e86-1a34-41db-9ba5-9b17b119d5a4"
+                  },
+                  "payee": {
+                    "description": "Código Uuid do recebedor",
+                    "type": "string",
+                    "example": "faf77e86-1a34-41db-9ba5-9b17b119d5a4"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transação Realizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResource"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erros de autorização",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TransactionUnauthorizedException"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Erros de request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/EnterpriseUserCannotBePayerException"
+                    },
+                    {
+                      "$ref": "#/components/schemas/InsufficientWalletAmountException"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TransactionToYourselfException"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erros internos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/AuthRequestException"
+                    },
+                    {
+                      "$ref": "#/components/schemas/NotificationRequestException"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GenericException"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TransactionResource": {
+        "properties": {
+          "id": {
+            "description": "Código Uuid da transação",
+            "type": "string",
+            "example": "faf77e86-1a34-41db-9ba5-9b17b119d5a4"
+          },
+          "sender_id": {
+            "description": "Código Uuid do pagador",
+            "type": "string",
+            "example": "faf77e86-1a34-41db-9ba5-9b17b119d5a4"
+          },
+          "receiver_id": {
+            "description": "Código Uuid do recebedor",
+            "type": "string",
+            "example": "faf77e86-1a34-41db-9ba5-9b17b119d5a4"
+          },
+          "value": {
+            "type": "integer",
+            "description": "Valor da transação",
+            "example": "10.00"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Data de criação da transação",
+            "example": "2000-01-01 00:00:00"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "Data de atualização da transação",
+            "example": "2000-01-01 00:00:00"
+          }
+        }
+      },
+      "AuthRequestException": {
+        "type": "object",
+        "allOf": [
+          {
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": "500"
+              },
+              "message": {
+                "type": "string",
+                "example": "transaction_auth_request_exception"
+              }
+            }
+          }
+        ]
+      },
+      "NotificationRequestException": {
+        "type": "object",
+        "allOf": [
+          {
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": "500"
+              },
+              "message": {
+                "type": "string",
+                "example": "notification_request_exception"
+              }
+            }
+          }
+        ]
+      },
+      "EnterpriseUserCannotBePayerException": {
+        "type": "object",
+        "allOf": [
+          {
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": "422"
+              },
+              "message": {
+                "type": "string",
+                "example": "enterprise_user_cannot_be_payer"
+              }
+            }
+          }
+        ]
+      },
+      "InsufficientWalletAmountException": {
+        "type": "object",
+        "allOf": [
+          {
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": "422"
+              },
+              "message": {
+                "type": "string",
+                "example": "insufficient_wallet_amount"
+              }
+            }
+          }
+        ]
+      },
+      "TransactionToYourselfException": {
+        "type": "object",
+        "allOf": [
+          {
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": "422"
+              },
+              "message": {
+                "type": "string",
+                "example": "transaction_to_yourself_exception"
+              }
+            }
+          }
+        ]
+      },
+      "TransactionUnauthorizedException": {
+        "type": "object",
+        "allOf": [
+          {
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": "401"
+              },
+              "message": {
+                "type": "string",
+                "example": "transaction_unauthorized_exception"
+              }
+            }
+          }
+        ]
+      },
+      "GenericException": {
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": "500"
+          },
+          "message": {
+            "type": "string",
+            "example": "generic"
+          }
+        },
+        "type": "object"
+      }
+    }
+  }
+}

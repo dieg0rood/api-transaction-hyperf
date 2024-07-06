@@ -1,0 +1,34 @@
+version: "3.4"
+
+volumes:
+  transaction-db-data:
+    driver: local
+
+services:
+  php:
+    container_name: transaction-php
+    tty: true
+    build:
+      context: ./
+    volumes:
+      - ./:/var/www/
+    ports:
+      - "9599:9501"
+#    entrypoint: bash -c "/usr/bin/supervisord -c /etc/supervisord.conf"
+    environment:
+      - PHP_IDE_CONFIG=serverName=${APP_NAME}
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    container_name: transaction-db
+    volumes:
+      - transaction-db-data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: transaction
+      MYSQL_TCP_PORT: 3316
+    ports:
+      - "3399:3316"
