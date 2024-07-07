@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HyperfTest\Cases;
 
 use App\Database\Schema;
+use App\Enum\ExceptionMessagesEnum;
 use App\Enum\UserTypesEnum;
 use App\ExternalServices\Interface\NotificationServiceInterface;
 use App\ExternalServices\Interface\TransactionAuthServiceInterface;
@@ -13,12 +14,11 @@ use App\Model\Wallet;
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\DbConnection\Db;
 use Hyperf\Testing\TestCase;
-use HyperfTest\Traits\ExpectsTrait;
 use Faker\Generator;
 use Faker\Factory;
 use Hyperf\Database\Model\Factory as FactoryModel;
 use Mockery;
-use Swoole\Http\Status;
+use Hyperf\Testing\Http\TestResponse;
 
 /**
  * @internal
@@ -26,17 +26,10 @@ use Swoole\Http\Status;
  */
 abstract class AbstractTest extends TestCase
 {
-    use ExpectsTrait;
-
     protected User $sender;
     protected User $receiver;
     private Generator $faker;
-
     private string $path = '/var/www/factories/';
-
-    public function getData($response) {
-        return json_decode($response->getBody()->getContents(), true);
-    }
     public function setUp(): void
     {
         $this->truncateDatabase();
@@ -119,12 +112,13 @@ abstract class AbstractTest extends TestCase
         );
     }
 
-    public function expectExceptionTest(array $response, $expectedErrorMessage = 'Generic Error', int $expectedStatusCode = Status::INTERNAL_SERVER_ERROR): void
+    public function expectExceptionTest(
+        TestResponse $response,
+        ExceptionMessagesEnum $expectedMessage,
+        int $expectedStatusCode
+    ): void
     {
-        $this->assertIsArray($response);
-        $this->assertArrayHasKey('code', $response);
-        $this->assertArrayHasKey('message', $response);
-        $this->assertEquals($response['code'], $expectedStatusCode);
-        $this->assertEquals($response['message'], $expectedErrorMessage);
+        $this->assertEquals($expectedMessage->value, $response->getBody()->getContents());
+        $this->assertEquals($expectedStatusCode, $response->getStatusCode());
     }
 }

@@ -22,7 +22,6 @@ class WalletService
         $balance = $wallet->getAmount()->subtract($amount);
 
         if ($balance->isNegative()) {
-            var_dump('toaq');
             throw new InsufficientWalletAmountException();
         }
 

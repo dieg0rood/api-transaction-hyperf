@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Exception\Auth;
 
-use Exception;
+use App\Enum\ExceptionMessagesEnum;
+use Hyperf\HttpMessage\Exception\UnauthorizedHttpException;
 
-class TransactionUnauthorizedException extends Exception
+class TransactionUnauthorizedException extends UnauthorizedHttpException
 {
     public function __construct()
     {
-        parent::__construct('Transaction Unauthorized');
+        parent::__construct(ExceptionMessagesEnum::TransactionUnauthorizedMessage->value);
     }
 }

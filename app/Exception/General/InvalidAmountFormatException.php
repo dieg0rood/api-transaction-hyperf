@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Exception\General;
 
-use Exception;
+use App\Enum\ExceptionMessagesEnum;
+use Hyperf\HttpMessage\Exception\BadRequestHttpException;
 
-class InvalidAmountFormatException extends Exception
+class InvalidAmountFormatException extends BadRequestHttpException
 {
     public function __construct()
     {
-        parent::__construct('Enterprise User Cannot Be Payer');
+        parent::__construct(ExceptionMessagesEnum::InvalidAmountFormatMessage->value);
     }
 }

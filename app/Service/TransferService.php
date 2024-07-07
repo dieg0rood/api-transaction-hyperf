@@ -35,7 +35,6 @@ class TransferService
         $receiver   = $this->userRepository->findOrFail($receiverId);
 
         if ($sender->getType() === UserTypesEnum::Enterprise->value) {
-            var_dump('toaq');
             throw new EnterpriseUserCannotBePayerException();
         }
 
