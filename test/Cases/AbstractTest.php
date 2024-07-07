@@ -28,6 +28,7 @@ abstract class AbstractTest extends TestCase
 {
     protected User $sender;
     protected User $receiver;
+    protected User $user;
     protected Generator $faker;
     private string $path = '/var/www/factories/';
     public function setUp(): void
@@ -53,7 +54,7 @@ abstract class AbstractTest extends TestCase
         Schema::enableForeignKeyConstraints();
     }
 
-    protected function makePersonalUser($walletBalance, $function): void
+    protected function makePersonalUser($walletBalance, $function = null): void
     {
         $user = $this->factory(User::class);
 
@@ -62,10 +63,16 @@ abstract class AbstractTest extends TestCase
             'amount' => $walletBalance
         ]);
 
-        $function === 'sender' ? $this->sender = $user : $this->receiver = $user;
+        if ($function === 'receiver') {
+            $this->receiver = $user;
+        } else if ($function === 'sender') {
+            $this->sender = $user;
+        } else {
+            $this->user = $user;
+        }
     }
 
-    protected function makeEnterpriseUser($walletBalance, $function): void
+    protected function makeEnterpriseUser($walletBalance, $function = null): void
     {
         $user = $this->factory(User::class, [
             'type' => UserTypesEnum::Enterprise->value
@@ -76,9 +83,16 @@ abstract class AbstractTest extends TestCase
             'amount' => $walletBalance
         ]);
 
-        $function === 'sender' ? $this->sender = $user : $this->receiver = $user;
+        if ($function === 'receiver') {
+            $this->receiver = $user;
+        } else if ($function === 'sender') {
+            $this->sender = $user;
+        } else {
+            $this->user = $user;
+        }
     }
-    private function factory(string $class, array $data = [])
+
+    protected function factory(string $class, array $data = [])
     {
         $faker = Factory::create('pt_BR');
         $factory = FactoryModel::construct($faker, $this->path);
