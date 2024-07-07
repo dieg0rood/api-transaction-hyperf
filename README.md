@@ -1,11 +1,16 @@
 
 # Transaction API
 
-A API transaction-hyperf faz de maneira simplificada uma transação entre duas pessoas, atualizando devidamente suas carteiras, enviando notificações e também é realizada uma validação externa para a autorização da transação (Mock).
+A API transaction-hyperf faz de maneira simplificada uma transação entre duas pessoas, atualizando devidamente suas carteiras, enviando notificações e também é realizada uma validação externa para a autorização da transação, e para envio de notificações.
 
+## Índice
 
+- [Instalação](#instalação)
+- [Arquitetura](#arquitetura)
+- [Testes](#testes)
+- [Documentação](#documentação)
 
-## Instalação/Configuração
+## Instalação
 
 Faça o clone o projeto em seu computador
 
@@ -31,29 +36,21 @@ Caso não esteja dê o start
   docker-composer up -d
 ```
 
-Acesse o bash do container, instale as dependencias do projeto
+- Renomeie o *.env.example* para *.env*
+- Insira os dados do banco de dados no *.env*
 
-```bash
-  composer install
-```
 
-Renomeie o .env.example para .env e o projeto já estará totalmente configurado
-    
-## Stack utilizada
+## Arquitetura
 
 **Back-end:** Php 8.2 - Framework HyperF
 
-Implementações e Justificativas:
+### Tecnologias
 
-- **Repository**: Menor acoplamento ao ORM utilizado 
-- **Resource**: Redução de acomplamento e padronização de retorno de dados de serviços.
-- **Testes Unitários**: Testes realizados pelo plugin disponibilizado no skeleton do projeto hyperf.
-- **Exceptions**: Foram criadas exceptions e handlers personalizados em todo o projeto, dessa forma com o auxilio da documentação(swagger) e os códigos de erros mapeados + http codes, qualquer consumidor da API será capaz de identificar a origem do erro, além de permitir que os testes façam a validação especifica de cada exception disparada.
-- **ExternalServices**: Pasta criada na raiz do app para armazenar de maneira separada requisições a serviços de terceiros, mantendo o diretório App\Services dedicado à serviços internos da API.
-- **Validação Request**: Utilizado a validação do framework, similar a validação feita via FormRequest do Laravel.
+Visando a redução do acoplamento, código limpo e escalabilidade, o desenho do sistema teve como base a utlização de [DTO](https://en.wikipedia.org/wiki/Data_transfer_object), [Repository](https://designpatternsphp.readthedocs.io/en/latest/More/Repository/README.html) e [Resources](https://laravel.com/docs/8.x/eloquent-resources).
 
+Onde possível também utilizei da [Injeção de dependencias](https://en.wikipedia.org/wiki/Dependency_injection) alinhado aos conceitos de [SOLID](https://en.wikipedia.org/wiki/SOLID) facilitando os testes e manutenibilidade.
 
-## Rodando os testes
+## Testes
 
 Para rodar os testes, rode o seguinte comando dentro do container
 
@@ -61,17 +58,7 @@ Para rodar os testes, rode o seguinte comando dentro do container
   composer test
 ```
 
-
-## Roadmap
-
-- Implementar Mocks nos testes, Adicionar testes nos serviços terceiros, caso de falha.
-
-- Aumentar a utilização de Injeção de dependencias para reduzir a chamada de funções estáticas
-
-- Padronizar a aplicação para trabalhar com valores em float (o objetivo inicial era trabalhar com valores como int, exemplo $10,00 = 1000). Reverter essa lógica.
-
-
 ## Documentação
 
-[Documentação] Disponível em docs\openai.json
+Disponível em [OpenAPI](docs\openai.json)
 

@@ -11,13 +11,13 @@
     }
   ],
   "paths": {
-    "/transfer": {
+    "/api/transfer": {
       "post": {
         "tags": [
           "Transaction"
         ],
-        "summary": "Realizar Transação",
-        "description": "Realiza a transação com autenticação externa para envio de emails e para a transação em si",
+        "summary": "Realizar Transferência",
+        "description": "Realiza a transferência entre a carteira de dois usuários",
         "operationId": "fb973237eceea3f148d6703c88ec11ac",
         "requestBody": {
           "required": true,
@@ -31,7 +31,7 @@
                 ],
                 "properties": {
                   "value": {
-                    "description": "Valor da transação",
+                    "description": "Valor a ser transferido",
                     "type": "number",
                     "example": "100.00"
                   },
@@ -52,18 +52,18 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Transação Realizada",
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransactionResource"
+                  "$ref": "#/components/schemas/TransferResource"
                 }
               }
             }
           },
           "401": {
-            "description": "Erros de autorização",
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -77,8 +77,29 @@
               }
             }
           },
-          "422": {
-            "description": "Erros de request",
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/InvalidAmountFormatException"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TransactionToYourselfException"
+                    },
+                    {
+                      "$ref": "#/components/schemas/InsufficientWalletAmountException"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbbiden",
             "content": {
               "application/json": {
                 "schema": {
@@ -86,12 +107,6 @@
                   "anyOf": [
                     {
                       "$ref": "#/components/schemas/EnterpriseUserCannotBePayerException"
-                    },
-                    {
-                      "$ref": "#/components/schemas/InsufficientWalletAmountException"
-                    },
-                    {
-                      "$ref": "#/components/schemas/TransactionToYourselfException"
                     }
                   ]
                 }
@@ -99,18 +114,12 @@
             }
           },
           "500": {
-            "description": "Erros internos",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/AuthRequestException"
-                    },
-                    {
-                      "$ref": "#/components/schemas/NotificationRequestException"
-                    },
                     {
                       "$ref": "#/components/schemas/GenericException"
                     }
@@ -130,154 +139,58 @@
   },
   "components": {
     "schemas": {
-      "TransactionResource": {
+      "TransferResource": {
         "properties": {
-          "id": {
-            "description": "Código Uuid da transação",
-            "type": "string",
-            "example": "faf77e86-1a34-41db-9ba5-9b17b119d5a4"
-          },
-          "sender_id": {
+          "payer_name": {
             "description": "Código Uuid do pagador",
             "type": "string",
             "example": "faf77e86-1a34-41db-9ba5-9b17b119d5a4"
           },
-          "receiver_id": {
+          "payer_type": {
+            "description": "Tipo do usuário pagador",
+            "type": "string",
+            "example": "Personal"
+          },
+          "payee_name": {
             "description": "Código Uuid do recebedor",
             "type": "string",
             "example": "faf77e86-1a34-41db-9ba5-9b17b119d5a4"
           },
-          "value": {
+          "payee_type": {
+            "description": "Tipo do usuário recebedor",
+            "type": "string",
+            "example": "Enterprise"
+          },
+          "amount_transfer": {
             "type": "integer",
-            "description": "Valor da transação",
+            "description": "Valor transferido",
             "example": "10.00"
-          },
-          "created_at": {
-            "type": "string",
-            "description": "Data de criação da transação",
-            "example": "2000-01-01 00:00:00"
-          },
-          "updated_at": {
-            "type": "string",
-            "description": "Data de atualização da transação",
-            "example": "2000-01-01 00:00:00"
           }
         }
       },
-      "AuthRequestException": {
-        "type": "object",
-        "allOf": [
-          {
-            "properties": {
-              "code": {
-                "type": "integer",
-                "example": "500"
-              },
-              "message": {
-                "type": "string",
-                "example": "transaction_auth_request_exception"
-              }
-            }
-          }
-        ]
-      },
-      "NotificationRequestException": {
-        "type": "object",
-        "allOf": [
-          {
-            "properties": {
-              "code": {
-                "type": "integer",
-                "example": "500"
-              },
-              "message": {
-                "type": "string",
-                "example": "notification_request_exception"
-              }
-            }
-          }
-        ]
-      },
       "EnterpriseUserCannotBePayerException": {
-        "type": "object",
-        "allOf": [
-          {
-            "properties": {
-              "code": {
-                "type": "integer",
-                "example": "422"
-              },
-              "message": {
-                "type": "string",
-                "example": "enterprise_user_cannot_be_payer"
-              }
-            }
-          }
-        ]
+        "type": "string",
+        "example": "Enterprise User Cannot Be Payer"
       },
       "InsufficientWalletAmountException": {
-        "type": "object",
-        "allOf": [
-          {
-            "properties": {
-              "code": {
-                "type": "integer",
-                "example": "422"
-              },
-              "message": {
-                "type": "string",
-                "example": "insufficient_wallet_amount"
-              }
-            }
-          }
-        ]
+        "type": "string",
+        "example": "Insufficient Wallet Balance"
       },
       "TransactionToYourselfException": {
-        "type": "object",
-        "allOf": [
-          {
-            "properties": {
-              "code": {
-                "type": "integer",
-                "example": "422"
-              },
-              "message": {
-                "type": "string",
-                "example": "transaction_to_yourself_exception"
-              }
-            }
-          }
-        ]
+        "type": "string",
+        "example": "Cannot transfer to yourself"
+      },
+      "InvalidAmountFormatException": {
+        "type": "string",
+        "example": "Invalid amount format"
       },
       "TransactionUnauthorizedException": {
-        "type": "object",
-        "allOf": [
-          {
-            "properties": {
-              "code": {
-                "type": "integer",
-                "example": "401"
-              },
-              "message": {
-                "type": "string",
-                "example": "transaction_unauthorized_exception"
-              }
-            }
-          }
-        ]
+        "type": "string",
+        "example": "Transaction Unauthorized"
       },
       "GenericException": {
-        "properties": {
-          "code": {
-            "type": "integer",
-            "example": "500"
-          },
-          "message": {
-            "type": "string",
-            "example": "generic"
-          }
-        },
-        "type": "object"
+        "type": "string",
+        "example": "Internal Server Error"
       }
     }
   }
