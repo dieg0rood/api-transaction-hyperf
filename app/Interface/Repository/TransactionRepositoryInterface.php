@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Interface\Repository;
 
-use App\DTO\TransactionDTO;
-use App\DTO\UserDTO;
+use App\Entity\TransactionEntity;
+use App\Entity\UserEntity;
 use App\ValueObject\Amount;
 
 interface TransactionRepositoryInterface
 {
-    public function create(UserDTO $sender, UserDTO $receiver, Amount $amount): TransactionDTO;
+    public function create(UserEntity $sender, UserEntity $receiver, Amount $amount): TransactionEntity;
 }

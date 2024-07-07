@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ExternalServices\Service\Notification;
 
-use App\DTO\UserDTO;
+use App\Entity\UserEntity;
 use App\Enum\TransactionNotificationEnum;
 use App\ExternalServices\Interface\NotificationServiceInterface;
 use App\ExternalServices\Request\Notification\NotificationRequest;
@@ -14,7 +14,7 @@ class NotificationService implements NotificationServiceInterface
 {
     public function __construct(private NotificationRequest $request){}
 
-    public function notifyTransfer(UserDTO $sender, UserDTO $receiver, Amount $amount): void
+    public function notifyTransfer(UserEntity $sender, UserEntity $receiver, Amount $amount): void
     {
         $messageToSender = TransactionNotificationEnum::Send->makeMessage($receiver->getFullName(), $amount->toMoney());
         $messageToReceiver = TransactionNotificationEnum::Receive->makeMessage($sender->getFullName(), $amount->toMoney());

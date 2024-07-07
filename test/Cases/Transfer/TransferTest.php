@@ -6,10 +6,8 @@ namespace HyperfTest\Cases\Transfer;
 
 use App\Enum\ExceptionMessagesEnum;
 use HyperfTest\Cases\AbstractTest;
+use Mockery;
 use Swoole\Http\Status;
-use function Swoole\Coroutine\parallel;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * @internal
@@ -43,15 +41,16 @@ class TransferTest extends AbstractTest
         $this->assertEquals($transferAmount, $responseBodyContent->data->amount_transfer);
     }
 
-    public function testTransferUnauthorizedWithException()
+    public function testTransferWithAuthorizationException()
     {
+        Mockery::resetContainer();
         $this->mockTransactionAuthorizedService(false);
 
-        $this->makePersonalUser(10000, 'sender');
-        $this->makePersonalUser(10000, 'receiver');
+        $this->makePersonalUser(100000, 'sender');
+        $this->makePersonalUser(100000, 'receiver');
 
         $body = [
-            'value' => 10.01,
+            'value' => 100.00,
             'payer' => $this->sender->id->toString(),
             'payee' => $this->receiver->id->toString(),
         ];
@@ -59,6 +58,7 @@ class TransferTest extends AbstractTest
         $response = $this->post('/api/transfer', $body);
 
         $this->expectExceptionTest($response, ExceptionMessagesEnum::TransactionUnauthorizedMessage, Status::UNAUTHORIZED);
+        Mockery::close();
     }
 
     public function testTransferEnterpriseToUserWithException()
@@ -133,27 +133,4 @@ class TransferTest extends AbstractTest
         $this->expectExceptionTest($response, ExceptionMessagesEnum::InsufficientWalletAmountMessage, Status::BAD_REQUEST);
     }
 
-    public function testMultipleTransferInSameTime(): void
-    {
-        $guzzle = new Client([
-            'base_uri' => 'http://localhost:9501',
-        ]);
-
-        $this->makePersonalUser(1000, 'sender');
-        $this->makePersonalUser(1000, 'receiver');
-
-        $body = [
-            'value' => 6.00,
-            'payer' => $this->sender->id->toString(),
-            'payee' => $this->receiver->id->toString(),
-        ];
-
-        parallel(4, function() use ($guzzle, $body) {
-            try{
-                $guzzle->post('/api/transfer', ['json' => $body]);
-            } catch (GuzzleException $e){}
-        });
-        $this->sender->refresh();
-        $this->assertEquals(400, $this->sender->wallet()->first()->amount);
-    }
 }

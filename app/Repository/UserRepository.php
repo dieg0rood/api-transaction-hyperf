@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\DTO\UserDTO;
+use App\Entity\UserEntity;
 use App\Interface\Repository\UserRepositoryInterface;
 use App\Model\User;
 use Hyperf\DbConnection\Db;
@@ -17,11 +17,11 @@ class UserRepository extends Repository implements UserRepositoryInterface
         parent::__construct($database);
     }
 
-    public function findOrFail(string $userId): ?UserDTO
+    public function findOrFail(string $userId): ?UserEntity
     {
         $user = $this->userModel->findOrFail($userId)->fresh();
 
-        return UserDTO::create(
+        return new UserEntity(
             id:         $user->id,
             full_name:  $user->full_name,
             email:      $user->email,

@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\DTO\TransactionDTO;
-use App\DTO\UserDTO;
+use App\Entity\TransactionEntity;
+use App\Entity\UserEntity;
 use App\Interface\Repository\TransactionRepositoryInterface;
 use App\Model\Transaction;
 use App\ValueObject\Amount;
@@ -16,14 +16,14 @@ class TransactionRepository extends Repository implements TransactionRepositoryI
         parent::__construct($database);
     }
 
-    public function create(UserDTO $sender, UserDTO $receiver, Amount $amount): TransactionDTO
+    public function create(UserEntity $sender, UserEntity $receiver, Amount $amount): TransactionEntity
     {
         $transaction = $this->transactionModel->create([
             'sender_id'     => $sender->getId(),
             'receiver_id'   => $receiver->getId(),
             'value'         => $amount->toInt()
         ]);
-        return TransactionDTO::create(
+        return new TransactionEntity(
             id:             $transaction->id,
             sender_id:      $transaction->sender_id,
             receiver_id:    $transaction->receiver_id,

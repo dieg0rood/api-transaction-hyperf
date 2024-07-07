@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\DTO\WalletDTO;
+use App\Entity\WalletEntity;
 use App\Interface\Repository\WalletRepositoryInterface;
 use App\Model\Wallet;
 use App\ValueObject\Amount;
@@ -17,7 +17,7 @@ class WalletRepository extends Repository implements WalletRepositoryInterface
         parent::__construct($database);
     }
 
-    public function getByUserId(string $userId, $lockForUpdate = false): ?WalletDTO
+    public function getByUserId(string $userId, $lockForUpdate = false): ?WalletEntity
     {
         $model = $this->walletModel;
 
@@ -31,14 +31,15 @@ class WalletRepository extends Repository implements WalletRepositoryInterface
             return null;
         }
 
-        return WalletDTO::create(
+
+        return new WalletEntity(
             id:         $wallet->id,
             user_id:    $wallet->user_id,
             amount:     Amount::fromInteger($wallet->amount)
         );
     }
 
-    public function updateBalance(WalletDTO $wallet, Amount $balance): bool
+    public function updateBalance(WalletEntity $wallet, Amount $balance): bool
     {
         $wallet = $this->walletModel->findOrFail($wallet->getId());
         return $wallet->update([

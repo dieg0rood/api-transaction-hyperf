@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\DTO\UserDTO;
+use App\DTO\TransferDTO;
+use App\Entity\UserEntity;
 use App\Enum\UserTypesEnum;
-use App\Exception\ApplicationException;
 use App\Exception\Auth\TransactionUnauthorizedException;
 use App\Exception\Transaction\TransactionToYourselfException;
 use App\Exception\User\EnterpriseUserCannotBePayerException;
@@ -15,8 +15,8 @@ use App\ExternalServices\Interface\NotificationServiceInterface;
 use App\ExternalServices\Interface\TransactionAuthServiceInterface;
 use App\Interface\Repository\RepositoryInterface;
 use App\Repository\UserRepository;
-use App\Resource\TransferResource;
 use App\ValueObject\Amount;
+use Exception;
 
 class TransferService
 {
@@ -29,7 +29,7 @@ class TransferService
         private NotificationServiceInterface    $notificationService
     ){}
 
-    public function handleTransfer(Amount $amount, string $senderId, string $receiverId): TransferResource
+    public function handleTransfer(Amount $amount, string $senderId, string $receiverId): TransferDTO
     {
         $sender     = $this->userRepository->findOrFail($senderId);
         $receiver   = $this->userRepository->findOrFail($receiverId);
@@ -45,14 +45,14 @@ class TransferService
         $this->makeTransfer($sender, $receiver, $amount);
         $this->notificationService->notifyTransfer($sender, $receiver, $amount);
 
-        return TransferResource::make([
-            'sender' => $sender,
-            'receiver' => $receiver,
-            'amount' =>$amount
-        ]);
+        return new TransferDTO(
+            sender:     $sender,
+            receiver:   $receiver,
+            amount:     $amount
+        );
     }
 
-    private function makeTransfer(UserDTO $sender, UserDTO $receiver, Amount $amount): void
+    private function makeTransfer(UserEntity $sender, UserEntity $receiver, Amount $amount): void
     {
         try {
             $this->repository->beginTransaction();
@@ -67,12 +67,9 @@ class TransferService
             }
 
             $this->repository->commit();
-        } catch (TransactionUnauthorizedException|InsufficientWalletAmountException $e) {
+        } catch (TransactionUnauthorizedException|InsufficientWalletAmountException|Exception $e) {
             $this->repository->rollback();
             throw $e;
-        } catch (\Exception $e) {
-            $this->repository->rollback();
-            throw new ApplicationException();
         }
     }
 }

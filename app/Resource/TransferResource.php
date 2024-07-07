@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Resource;
 
-use App\DTO\UserDTO;
+use App\Entity\UserEntity;
 use App\ValueObject\Amount;
 use Hyperf\Resource\Json\JsonResource;
 
@@ -13,10 +13,10 @@ class TransferResource extends JsonResource
 
     public function toArray(): array
     {
-        /** @var UserDTO $sender */
+        /** @var UserEntity $sender */
         $sender = $this->resource['sender'];
 
-        /** @var UserDTO $receiver */
+        /** @var UserEntity $receiver */
         $receiver = $this->resource['receiver'];
 
         /** @var Amount $amount */

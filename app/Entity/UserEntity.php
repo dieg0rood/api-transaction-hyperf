@@ -2,19 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\DTO;
+namespace App\Entity;
 
-readonly class UserDTO {
-    private function __construct(
-        public string $id,
-        public string $full_name,
-        public string $email,
-        public string $type
+readonly class UserEntity {
+    public function __construct(
+        private string $id,
+        private string $full_name,
+        private string $email,
+        private string $type
     ) {}
-
-    public static function create(string $id, string $full_name, string $email, $type): UserDTO {
-        return new self($id, $full_name, $email, $type);
-    }
 
     public function getType(): string
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Request\TransferRequest;
+use App\Resource\TransferResource;
 use App\Service\TransferService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Hyperf\HttpServer\Contract\ResponseInterface;
@@ -18,15 +19,19 @@ class TransferController
     #[Inject]
     protected ResponseInterface $response;
 
-
     public function transfer (TransferRequest $request): Response
     {
-        $transaction = $this->service->handleTransfer(
+        $transfer = $this->service->handleTransfer(
             $request->getTransactionValue(),
             $request->getSenderId(),
             $request->getReceiverId()
         );
 
-        return $transaction->toResponse()->withStatus(Status::CREATED);
+        return TransferResource::make([
+            'sender'    => $transfer->getSender(),
+            'receiver'  => $transfer->getReceiver(),
+            'amount'    => $transfer->getAmount()
+        ])->toResponse()
+            ->withStatus(Status::CREATED);
     }
 }
