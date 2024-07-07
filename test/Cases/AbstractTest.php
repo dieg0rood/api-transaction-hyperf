@@ -14,10 +14,11 @@ use App\Model\Wallet;
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\DbConnection\Db;
 use Hyperf\Testing\TestCase;
-use Faker\Factory;
 use Hyperf\Database\Model\Factory as FactoryModel;
 use Mockery;
 use Hyperf\Testing\Http\TestResponse;
+use Faker\Generator;
+use Faker\Factory;
 
 /**
  * @internal
@@ -27,11 +28,13 @@ abstract class AbstractTest extends TestCase
 {
     protected User $sender;
     protected User $receiver;
+    protected Generator $faker;
     private string $path = '/var/www/factories/';
     public function setUp(): void
     {
         $this->truncateDatabase();
         $this->mockNotifyService();
+        $this->faker = Factory::create();
     }
 
     private function truncateDatabase(): void

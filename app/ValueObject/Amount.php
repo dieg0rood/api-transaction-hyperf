@@ -19,7 +19,7 @@ class Amount
         if (!is_float($amount)) {
             throw new InvalidAmountFormatException();
         }
-        $amount = $amount * 100;
+        $amount = round($amount * 100);
 
         return new Amount((int)$amount);
     }

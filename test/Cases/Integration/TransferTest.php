@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace HyperfTest\Cases\Transfer;
+namespace HyperfTest\Cases\Integration;
 
 use App\Enum\ExceptionMessagesEnum;
+use App\Enum\UserTypesEnum;
 use HyperfTest\Cases\AbstractTest;
-use Mockery;
 use Swoole\Http\Status;
 
 /**
@@ -15,13 +15,16 @@ use Swoole\Http\Status;
  */
 class TransferTest extends AbstractTest
 {
-    public function testSuccessTransferUserToUserResponse()
+    public function testTransferPersonalUserToPersonalUserSuccess()
     {
         $this->mockTransactionAuthorizedService();
 
-        $this->makePersonalUser(100000, 'sender');
-        $this->makePersonalUser(100000, 'receiver');
-        $transferAmount = 10.01;
+        $initialBalance = 10000;
+
+        $this->makePersonalUser($initialBalance, 'sender');
+        $this->makePersonalUser($initialBalance, 'receiver');
+
+        $transferAmount = $this->faker->randomFloat(nbMaxDecimals: 2, max: 100);
 
         $body = [
             'value' => $transferAmount,
@@ -35,30 +38,46 @@ class TransferTest extends AbstractTest
         $this->assertEquals(Status::CREATED, $response->getStatusCode());
 
         $this->assertEquals($this->sender->full_name, $responseBodyContent->data->payer_name);
-        $this->assertEquals($this->sender->type, $responseBodyContent->data->payer_type);
+        $this->assertEquals(UserTypesEnum::Personal->value, $responseBodyContent->data->payer_type);
         $this->assertEquals($this->receiver->full_name, $responseBodyContent->data->payee_name);
-        $this->assertEquals($this->receiver->type, $responseBodyContent->data->payee_type);
+        $this->assertEquals(UserTypesEnum::Personal->value, $responseBodyContent->data->payee_type);
         $this->assertEquals($transferAmount, $responseBodyContent->data->amount_transfer);
+
+
+        $this->assertEquals($initialBalance - round($transferAmount * 100), $this->sender->wallet()->first()->amount);
+        $this->assertEquals($initialBalance + round($transferAmount * 100), $this->receiver->wallet()->first()->amount);
     }
 
-    public function testTransferWithAuthorizationException()
+    public function testTransferPersonalUserToEnterpriseUserSuccess()
     {
-        Mockery::resetContainer();
-        $this->mockTransactionAuthorizedService(false);
+        $this->mockTransactionAuthorizedService();
 
-        $this->makePersonalUser(100000, 'sender');
-        $this->makePersonalUser(100000, 'receiver');
+        $initialBalance = 10000;
+
+        $this->makePersonalUser($initialBalance, 'sender');
+        $this->makeEnterpriseUser($initialBalance, 'receiver');
+
+        $transferAmount = $this->faker->randomFloat(nbMaxDecimals: 2, max: 100);
 
         $body = [
-            'value' => 100.00,
+            'value' => $transferAmount,
             'payer' => $this->sender->id->toString(),
             'payee' => $this->receiver->id->toString(),
         ];
 
         $response = $this->post('/api/transfer', $body);
+        $responseBodyContent = json_decode($response->getBody()->getContents());
 
-        $this->expectExceptionTest($response, ExceptionMessagesEnum::TransactionUnauthorizedMessage, Status::UNAUTHORIZED);
-        Mockery::close();
+        $this->assertEquals(Status::CREATED, $response->getStatusCode());
+
+        $this->assertEquals($this->sender->full_name, $responseBodyContent->data->payer_name);
+        $this->assertEquals(UserTypesEnum::Personal->value, $responseBodyContent->data->payer_type);
+        $this->assertEquals($this->receiver->full_name, $responseBodyContent->data->payee_name);
+        $this->assertEquals(UserTypesEnum::Enterprise->value, $responseBodyContent->data->payee_type);
+        $this->assertEquals($transferAmount, $responseBodyContent->data->amount_transfer);
+
+        $this->assertEquals($initialBalance - round($transferAmount * 100), $this->sender->wallet()->first()->amount);
+        $this->assertEquals($initialBalance + round($transferAmount * 100), $this->receiver->wallet()->first()->amount);
     }
 
     public function testTransferEnterpriseToUserWithException()
@@ -68,8 +87,10 @@ class TransferTest extends AbstractTest
         $this->makeEnterpriseUser(10000, 'sender');
         $this->makePersonalUser(10000, 'receiver');
 
+        $transferAmount = $this->faker->randomFloat(nbMaxDecimals: 2, max: 100);
+
         $body = [
-            'value' => 10.01,
+            'value' => $transferAmount,
             'payer' => $this->sender->id->toString(),
             'payee' => $this->receiver->id->toString(),
         ];
@@ -86,8 +107,10 @@ class TransferTest extends AbstractTest
         $this->makePersonalUser(10000, 'sender');
         $this->makePersonalUser(10000, 'receiver');
 
+        $transferAmount = $this->faker->numberBetween(1,10000);
+
         $body = [
-            'value' => 9999,
+            'value' => $transferAmount,
             'payer' => $this->sender->id->toString(),
             'payee' => $this->receiver->id->toString(),
         ];
@@ -103,9 +126,10 @@ class TransferTest extends AbstractTest
 
         $this->makePersonalUser(10000, 'sender');
         $this->receiver = $this->sender;
+        $transferAmount = $this->faker->randomFloat(nbMaxDecimals: 2, max: 100);
 
         $body = [
-            'value' => 10.01,
+            'value' => $transferAmount,
             'payer' => $this->sender->id->toString(),
             'payee' => $this->receiver->id->toString(),
         ];
@@ -121,6 +145,8 @@ class TransferTest extends AbstractTest
 
         $this->makePersonalUser(1000, 'sender');
         $this->makePersonalUser(1000, 'receiver');
+
+        $transferAmount = $this->faker->randomFloat(nbMaxDecimals: 2, min: 100);
 
         $body = [
             'value' => 100.00,

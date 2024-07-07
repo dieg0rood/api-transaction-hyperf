@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Request;
 
 use App\Interface\Request\TransactionRequestInterface;
+use App\Rule\AmountRule;
 use App\ValueObject\Amount;
-use Hyperf\Validation\Request\FormRequest;
 
-class TransferRequest extends FormRequest implements TransactionRequestInterface
+class TransferRequest extends AbstractFormRequest implements TransactionRequestInterface
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,8 @@ class TransferRequest extends FormRequest implements TransactionRequestInterface
             'value' => [
                 'required',
                 'numeric',
-                'min:1'
+                'min:1',
+                new AmountRule()
             ],
             'payer' => [
                 'required',
