@@ -149,7 +149,7 @@ class TransferTest extends AbstractTest
         $transferAmount = $this->faker->randomFloat(nbMaxDecimals: 2, min: 100);
 
         $body = [
-            'value' => 100.00,
+            'value' => $transferAmount,
             'payer' => $this->sender->id->toString(),
             'payee' => $this->receiver->id->toString(),
         ];

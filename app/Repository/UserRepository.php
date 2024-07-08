@@ -22,7 +22,7 @@ class UserRepository extends Repository implements UserRepositoryInterface
         $user = $this->userModel->findOrFail($userId)->fresh();
 
         return new UserEntity(
-            id:         $user->id->toString(),
+            id:         $user->id,
             full_name:  $user->full_name,
             email:      $user->email,
             type:       $user->type

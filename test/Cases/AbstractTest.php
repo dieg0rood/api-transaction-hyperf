@@ -9,6 +9,7 @@ use App\Enum\ExceptionMessagesEnum;
 use App\Enum\UserTypesEnum;
 use App\ExternalServices\Interface\NotificationServiceInterface;
 use App\ExternalServices\Interface\TransactionAuthServiceInterface;
+use App\ExternalServices\Service\TransactionAuth\TransactionAuthService;
 use App\Model\User;
 use App\Model\Wallet;
 use Hyperf\Utils\ApplicationContext;
@@ -134,5 +135,14 @@ abstract class AbstractTest extends TestCase
     {
         $this->assertEquals($expectedMessage->value, $response->getBody()->getContents());
         $this->assertEquals($expectedStatusCode, $response->getStatusCode());
+    }
+
+    protected function getMockTransactionAuthorizedService(bool $return = true): TransactionAuthService
+    {
+        return Mockery::mock(TransactionAuthService::class)
+            ->shouldReceive('auth')
+            ->andReturn($return)
+            ->getMock()
+            ->makePartial();
     }
 }
