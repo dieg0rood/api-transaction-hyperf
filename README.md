@@ -60,5 +60,5 @@ Para rodar os testes, rode o seguinte comando dentro do container
 
 ## Documentação
 
-Disponível em [OpenAPI](docs\openai.json)
+Disponível em [OpenAPI](https://github.com/dieg0rood/api-transaction-hyperf/blob/main/doc/openapi.json)
 
