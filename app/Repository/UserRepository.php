@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\UserEntity;
+use App\Exception\Repository\UserDataNotFoundException;
 use App\Interface\Repository\UserRepositoryInterface;
 use App\Model\User;
 use Hyperf\DbConnection\Db;
@@ -19,7 +20,11 @@ class UserRepository extends Repository implements UserRepositoryInterface
 
     public function findOrFail(string $userId): ?UserEntity
     {
-        $user = $this->userModel->findOrFail($userId)->fresh();
+        $user = $this->userModel->find($userId);
+
+        if(!$user) {
+            throw new UserDataNotFoundException();
+        }
 
         return new UserEntity(
             id:         $user->id,

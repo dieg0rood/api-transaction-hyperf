@@ -10,5 +10,6 @@ enum ExceptionMessagesEnum: string
     case TransactionToYourselfMessage = 'Cannot transfer to yourself';
     case EnterpriseUserCannotBePayerMessage = 'Enterprise User Cannot Be Payer';
     case InsufficientWalletAmountMessage = 'Insufficient Wallet Balance';
+    case UserDataNotFoundMessage = 'User data not found';
 
 }

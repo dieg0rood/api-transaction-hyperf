@@ -113,6 +113,21 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/UserDataNotFoundException"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -187,6 +202,10 @@
       "TransactionUnauthorizedException": {
         "type": "string",
         "example": "Transaction Unauthorized"
+      },
+      "UserDataNotFoundException": {
+        "type": "string",
+        "example": "User Data Not Found"
       },
       "GenericException": {
         "type": "string",

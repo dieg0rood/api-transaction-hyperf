@@ -6,6 +6,7 @@ namespace HyperfTest\Cases\Integration;
 
 use App\Enum\ExceptionMessagesEnum;
 use App\Enum\UserTypesEnum;
+use Hyperf\Stringable\Str;
 use HyperfTest\Cases\AbstractTest;
 use Swoole\Http\Status;
 
@@ -157,6 +158,23 @@ class TransferTest extends AbstractTest
         $response = $this->post('/api/transfer', $body);
 
         $this->expectExceptionTest($response, ExceptionMessagesEnum::InsufficientWalletAmountMessage, Status::BAD_REQUEST);
+    }
+
+    public function testTransferWithNotFoundUserException()
+    {
+        $this->mockTransactionAuthorizedService();
+
+        $transferAmount = $this->faker->randomFloat(nbMaxDecimals: 2, min: 100);
+
+        $body = [
+            'value' => $transferAmount,
+            'payer' => Str::uuid()->toString(),
+            'payee' => Str::uuid()->toString(),
+        ];
+
+        $response = $this->post('/api/transfer', $body);
+
+        $this->expectExceptionTest($response, ExceptionMessagesEnum::UserDataNotFoundMessage, Status::NOT_FOUND);
     }
 
 }
