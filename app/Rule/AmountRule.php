@@ -24,7 +24,7 @@ class AmountRule implements Rule
         if (! is_numeric($value)) {
             return false;
         }
-        $decimalCases = explode('.', (string)$value);
+        $decimalCases = explode('.', (string) $value);
         if (! empty($decimalCases[1]) && strlen($decimalCases[1]) > 2) {
             return false;
         }
