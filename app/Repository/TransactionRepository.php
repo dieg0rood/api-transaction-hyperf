@@ -25,8 +25,8 @@ class TransactionRepository extends Repository implements TransactionRepositoryI
         ]);
         return new TransactionEntity(
             id:             $transaction->id,
-            sender_id:      $transaction->sender_id,
-            receiver_id:    $transaction->receiver_id,
+            senderId:       $transaction->sender_id,
+            receiverId:     $transaction->receiver_id,
             value:          Amount::fromInteger($transaction->value)
         );
     }

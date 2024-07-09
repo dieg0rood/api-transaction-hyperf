@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HyperfTest\Cases\Services;
 
 use App\Entity\UserEntity;
+use App\Exception\Repository\WalletDataNotFoundException;
 use App\Exception\Wallet\InsufficientWalletAmountException;
 use App\Model\User;
 use App\Service\WalletService;
@@ -32,7 +33,7 @@ class WalletServiceTest extends AbstractTest
     {
         return new UserEntity(
             id:         $user->id->toString(),
-            full_name:  $user->full_name,
+            fullName:   $user->full_name,
             email:      $user->email,
             type:       $user->type
         );
@@ -68,6 +69,21 @@ class WalletServiceTest extends AbstractTest
         $this->walletService->withdraw($entity, $amount);
     }
 
+    public function testWithdrawWithWalletNotFoundException()
+    {
+        $this->makePersonalUser(10000, null, false);
+
+        $entity = $this->userEntity($this->user);
+
+        $amount = Amount::fromDecimal(
+            $this->faker->randomFloat(nbMaxDecimals: 2, min: 101)
+        );
+
+        $this->expectException(WalletDataNotFoundException::class);
+
+        $this->walletService->withdraw($entity, $amount);
+    }
+
     public function testDepositWithSuccess()
     {
         $this->makePersonalUser(10000);
@@ -81,6 +97,22 @@ class WalletServiceTest extends AbstractTest
         $this->walletService->deposit($entity, $amount);
 
         $this->assertEquals(10000 + $amount->toInt(), $this->user->wallet()->first()->amount);
+    }
+
+    public function testDepositWithWalletNotFoundException()
+    {
+        $this->makePersonalUser(10000, null, false);
+
+        $entity = $this->userEntity($this->user);
+
+        $amount = Amount::fromDecimal(
+            $this->faker->randomFloat(nbMaxDecimals: 2, max: 100)
+        );
+
+        $this->expectException(WalletDataNotFoundException::class);
+
+        $this->walletService->deposit($entity, $amount);
+
     }
 
 }

@@ -122,6 +122,9 @@
                   "anyOf": [
                     {
                       "$ref": "#/components/schemas/UserDataNotFoundException"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WalletDataNotFoundException"
                     }
                   ]
                 }
@@ -206,6 +209,10 @@
       "UserDataNotFoundException": {
         "type": "string",
         "example": "User Data Not Found"
+      },
+      "WalletDataNotFoundException": {
+        "type": "string",
+        "example": "Wallet Data Not Found"
       },
       "GenericException": {
         "type": "string",

@@ -37,7 +37,7 @@ class TransferServiceTest extends AbstractTest
     {
         return new UserEntity(
             id:         $user->id->toString(),
-            full_name:  $user->full_name,
+            fullName:   $user->full_name,
             email:      $user->email,
             type:       $user->type
         );

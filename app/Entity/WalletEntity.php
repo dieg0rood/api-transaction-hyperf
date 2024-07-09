@@ -9,7 +9,7 @@ use App\ValueObject\Amount;
 readonly class WalletEntity {
     public function __construct(
         private string $id,
-        private string $user_id,
+        private string $userId,
         private Amount $amount,
     ) {}
 
@@ -20,7 +20,7 @@ readonly class WalletEntity {
 
     public function getUserId(): string
     {
-        return $this->user_id;
+        return $this->userId;
     }
 
     public function getId(): string

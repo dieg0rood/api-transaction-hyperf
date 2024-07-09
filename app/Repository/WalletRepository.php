@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\WalletEntity;
+use App\Exception\Repository\WalletDataNotFoundException;
 use App\Interface\Repository\WalletRepositoryInterface;
 use App\Model\Wallet;
 use App\ValueObject\Amount;
@@ -17,24 +18,17 @@ class WalletRepository extends Repository implements WalletRepositoryInterface
         parent::__construct($database);
     }
 
-    public function getByUserId(string $userId, $lockForUpdate = false): ?WalletEntity
+    public function getByUserId(string $userId): WalletEntity
     {
-        $model = $this->walletModel;
-
-        if ($lockForUpdate) {
-            $model = $this->walletModel::lockForUpdate();
-        }
-
-        $wallet = $model->where('user_id', $userId)->first();
+        $wallet = $this->walletModel::lockForUpdate()->where('user_id', $userId)->first();
 
         if(!$wallet) {
-            return null;
+            throw new WalletDataNotFoundException();
         }
-
 
         return new WalletEntity(
             id:         $wallet->id,
-            user_id:    $wallet->user_id,
+            userId:     $wallet->user_id,
             amount:     Amount::fromInteger($wallet->amount)
         );
     }

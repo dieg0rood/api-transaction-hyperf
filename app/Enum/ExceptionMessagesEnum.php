@@ -11,5 +11,6 @@ enum ExceptionMessagesEnum: string
     case EnterpriseUserCannotBePayerMessage = 'Enterprise User Cannot Be Payer';
     case InsufficientWalletAmountMessage = 'Insufficient Wallet Balance';
     case UserDataNotFoundMessage = 'User data not found';
+    case WalletDataNotFoundMessage = 'Wallet data not found';
 
 }

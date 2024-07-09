@@ -9,6 +9,6 @@ use App\ValueObject\Amount;
 
 interface WalletRepositoryInterface
 {
-    public function getByUserId(string $userId, $lockForUpdate = false): ?WalletEntity;
+    public function getByUserId(string $userId): WalletEntity;
     public function updateBalance(WalletEntity $wallet, Amount $balance): bool;
 }

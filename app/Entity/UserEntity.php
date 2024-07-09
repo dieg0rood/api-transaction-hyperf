@@ -7,7 +7,7 @@ namespace App\Entity;
 readonly class UserEntity {
     public function __construct(
         private string $id,
-        private string $full_name,
+        private string $fullName,
         private string $email,
         private string $type
     ) {}
@@ -19,7 +19,7 @@ readonly class UserEntity {
 
     public function getFullName(): string
     {
-        return $this->full_name;
+        return $this->fullName;
     }
 
     public function getEmail(): string

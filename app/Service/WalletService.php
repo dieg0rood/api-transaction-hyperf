@@ -9,16 +9,15 @@ use App\Exception\Wallet\InsufficientWalletAmountException;
 use App\Interface\Repository\WalletRepositoryInterface;
 use App\ValueObject\Amount;
 
-class WalletService
+readonly class WalletService
 {
-    const LOCK_FOR_UPDATE = true;
     public function __construct(
-        private readonly WalletRepositoryInterface $walletRepository
+        private WalletRepositoryInterface $walletRepository
     ){}
 
     public function withdraw(UserEntity $user, Amount $amount): bool
     {
-        $wallet = $this->walletRepository->getByUserId($user->getId(), self::LOCK_FOR_UPDATE);
+        $wallet = $this->walletRepository->getByUserId($user->getId());
         $balance = $wallet->getAmount()->subtract($amount);
 
         if ($balance->isNegative()) {
@@ -29,7 +28,7 @@ class WalletService
     }
     public function deposit(UserEntity $user, Amount $amount): bool
     {
-        $wallet = $this->walletRepository->getByUserId($user->getId(), self::LOCK_FOR_UPDATE);
+        $wallet = $this->walletRepository->getByUserId($user->getId());
         $balance = $wallet->getAmount()->sum($amount);
 
         return $this->walletRepository->updateBalance($wallet, $balance);

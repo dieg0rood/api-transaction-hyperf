@@ -55,14 +55,16 @@ abstract class AbstractTest extends TestCase
         Schema::enableForeignKeyConstraints();
     }
 
-    protected function makePersonalUser($walletBalance, $function = null): void
+    protected function makePersonalUser($walletBalance, $function = null, $withWallet = true): void
     {
         $user = $this->factory(User::class);
 
-        $this->factory(Wallet::class, [
-            'user_id' => $user->id,
-            'amount' => $walletBalance
-        ]);
+        if ($withWallet) {
+            $this->factory(Wallet::class, [
+                'user_id' => $user->id,
+                'amount' => $walletBalance
+            ]);
+        }
 
         if ($function === 'receiver') {
             $this->receiver = $user;
@@ -73,16 +75,18 @@ abstract class AbstractTest extends TestCase
         }
     }
 
-    protected function makeEnterpriseUser($walletBalance, $function = null): void
+    protected function makeEnterpriseUser($walletBalance, $function = null, $withWallet = true): void
     {
         $user = $this->factory(User::class, [
             'type' => UserTypesEnum::Enterprise->value
         ]);
 
-        $this->factory(Wallet::class, [
-            'user_id' => $user->id,
-            'amount' => $walletBalance
-        ]);
+        if ($withWallet) {
+            $this->factory(Wallet::class, [
+                'user_id' => $user->id,
+                'amount' => $walletBalance
+            ]);
+        }
 
         if ($function === 'receiver') {
             $this->receiver = $user;

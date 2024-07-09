@@ -9,8 +9,8 @@ use App\ValueObject\Amount;
 readonly class TransactionEntity {
     public function __construct(
         private string $id,
-        private string $sender_id,
-        private string $receiver_id,
+        private string $senderId,
+        private string $receiverId,
         private Amount $value
     ) {}
 
@@ -26,12 +26,12 @@ readonly class TransactionEntity {
 
     public function getReceiverId(): string
     {
-        return $this->receiver_id;
+        return $this->receiverId;
     }
 
     public function getSenderId(): string
     {
-        return $this->sender_id;
+        return $this->senderId;
     }
 
 }

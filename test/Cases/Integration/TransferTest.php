@@ -177,4 +177,24 @@ class TransferTest extends AbstractTest
         $this->expectExceptionTest($response, ExceptionMessagesEnum::UserDataNotFoundMessage, Status::NOT_FOUND);
     }
 
+    public function testTransferWithNotFoundWalletException()
+    {
+        $this->mockTransactionAuthorizedService();
+
+        $this->makePersonalUser(1000, 'sender', false);
+        $this->makePersonalUser(1000, 'receiver', false);
+
+        $transferAmount = $this->faker->randomFloat(nbMaxDecimals: 2, min: 100);
+
+        $body = [
+            'value' => $transferAmount,
+            'payer' => $this->sender->id->toString(),
+            'payee' => $this->receiver->id->toString(),
+        ];
+
+        $response = $this->post('/api/transfer', $body);
+
+        $this->expectExceptionTest($response, ExceptionMessagesEnum::WalletDataNotFoundMessage, Status::NOT_FOUND);
+    }
+
 }
