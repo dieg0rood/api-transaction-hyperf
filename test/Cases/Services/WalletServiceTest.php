@@ -32,7 +32,7 @@ class WalletServiceTest extends AbstractTest
     private function UserEntity(User $user): UserEntity
     {
         return new UserEntity(
-            id:         $user->id->toString(),
+            userId:     $user->id->toString(),
             fullName:   $user->full_name,
             email:      $user->email,
             type:       $user->type

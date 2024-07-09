@@ -27,7 +27,7 @@ class WalletRepository extends Repository implements WalletRepositoryInterface
         }
 
         return new WalletEntity(
-            id:         $wallet->id,
+            walletId:   $wallet->id,
             userId:     $wallet->user_id,
             amount:     Amount::fromInteger($wallet->amount)
         );

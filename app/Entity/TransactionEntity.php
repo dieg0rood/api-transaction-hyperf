@@ -8,7 +8,7 @@ use App\ValueObject\Amount;
 
 readonly class TransactionEntity {
     public function __construct(
-        private string $id,
+        private string $transactionId,
         private string $senderId,
         private string $receiverId,
         private Amount $value
@@ -16,7 +16,7 @@ readonly class TransactionEntity {
 
     public function getId(): string
     {
-        return $this->id;
+        return $this->transactionId;
     }
 
     public function getValue(): Amount

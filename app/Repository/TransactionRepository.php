@@ -24,7 +24,7 @@ class TransactionRepository extends Repository implements TransactionRepositoryI
             'value'         => $amount->toInt()
         ]);
         return new TransactionEntity(
-            id:             $transaction->id,
+            transactionId:  $transaction->id,
             senderId:       $transaction->sender_id,
             receiverId:     $transaction->receiver_id,
             value:          Amount::fromInteger($transaction->value)

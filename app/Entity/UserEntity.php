@@ -6,7 +6,7 @@ namespace App\Entity;
 
 readonly class UserEntity {
     public function __construct(
-        private string $id,
+        private string $userId,
         private string $fullName,
         private string $email,
         private string $type
@@ -29,6 +29,6 @@ readonly class UserEntity {
 
     public function getId(): string
     {
-        return $this->id;
+        return $this->userId;
     }
 }

@@ -27,7 +27,7 @@ class UserRepository extends Repository implements UserRepositoryInterface
         }
 
         return new UserEntity(
-            id:         $user->id,
+            userId:     $user->id,
             fullName:   $user->full_name,
             email:      $user->email,
             type:       $user->type
