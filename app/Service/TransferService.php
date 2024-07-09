@@ -1,6 +1,14 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace App\Service;
 
@@ -21,18 +29,19 @@ use Exception;
 class TransferService
 {
     public function __construct(
-        private UserRepository                  $userRepository,
+        private UserRepository $userRepository,
         private TransactionAuthServiceInterface $authService,
-        private RepositoryInterface             $repository,
-        private WalletService                   $walletService,
-        private TransactionService              $transactionService,
-        private NotificationServiceInterface    $notificationService
-    ){}
+        private RepositoryInterface $repository,
+        private WalletService $walletService,
+        private TransactionService $transactionService,
+        private NotificationServiceInterface $notificationService
+    ) {
+    }
 
     public function handleTransfer(Amount $amount, string $senderId, string $receiverId): TransferDTO
     {
-        $sender     = $this->userRepository->findOrFail($senderId);
-        $receiver   = $this->userRepository->findOrFail($receiverId);
+        $sender = $this->userRepository->findOrFail($senderId);
+        $receiver = $this->userRepository->findOrFail($receiverId);
 
         if ($sender->getType() === UserTypesEnum::Enterprise->value) {
             throw new EnterpriseUserCannotBePayerException();
@@ -46,9 +55,9 @@ class TransferService
         $this->notificationService->notifyTransfer($sender, $receiver, $amount);
 
         return new TransferDTO(
-            sender:     $sender,
-            receiver:   $receiver,
-            amount:     $amount
+            sender: $sender,
+            receiver: $receiver,
+            amount: $amount
         );
     }
 
@@ -62,12 +71,12 @@ class TransferService
 
             $this->transactionService->create($sender, $receiver, $amount);
 
-            if (!$this->authService->auth()) {
+            if (! $this->authService->auth()) {
                 throw new TransactionUnauthorizedException();
             }
 
             $this->repository->commit();
-        } catch (TransactionUnauthorizedException|InsufficientWalletAmountException|Exception $e) {
+        } catch (Exception|InsufficientWalletAmountException|TransactionUnauthorizedException $e) {
             $this->repository->rollback();
             throw $e;
         }

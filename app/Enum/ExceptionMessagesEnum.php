@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace App\Enum;
 
 enum ExceptionMessagesEnum: string
@@ -12,5 +22,4 @@ enum ExceptionMessagesEnum: string
     case InsufficientWalletAmountMessage = 'Insufficient Wallet Balance';
     case UserDataNotFoundMessage = 'User data not found';
     case WalletDataNotFoundMessage = 'Wallet data not found';
-
 }

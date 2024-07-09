@@ -1,18 +1,28 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace App\DTO;
 
 use App\Entity\UserEntity;
 use App\ValueObject\Amount;
 
-readonly class TransferDTO {
+readonly class TransferDTO
+{
     public function __construct(
         private UserEntity $sender,
         private UserEntity $receiver,
-        private Amount     $amount
-    ) {}
+        private Amount $amount
+    ) {
+    }
 
     public function getSender(): UserEntity
     {

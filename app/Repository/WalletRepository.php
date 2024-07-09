@@ -1,6 +1,14 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace App\Repository;
 
@@ -22,14 +30,14 @@ class WalletRepository extends Repository implements WalletRepositoryInterface
     {
         $wallet = $this->walletModel::lockForUpdate()->where('user_id', $userId)->first();
 
-        if(!$wallet) {
+        if (! $wallet) {
             throw new WalletDataNotFoundException();
         }
 
         return new WalletEntity(
-            walletId:   $wallet->id,
-            userId:     $wallet->user_id,
-            amount:     Amount::fromInteger($wallet->amount)
+            walletId: $wallet->id,
+            userId: $wallet->user_id,
+            amount: Amount::fromInteger($wallet->amount)
         );
     }
 
@@ -37,8 +45,7 @@ class WalletRepository extends Repository implements WalletRepositoryInterface
     {
         $wallet = $this->walletModel->findOrFail($wallet->getId());
         return $wallet->update([
-            'amount' => $balance->toInt()
+            'amount' => $balance->toInt(),
         ]);
     }
-
 }

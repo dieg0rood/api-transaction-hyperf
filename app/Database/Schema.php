@@ -1,12 +1,20 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace App\Database;
 
+use Hyperf\Context\ApplicationContext;
 use Hyperf\Database\ConnectionResolverInterface;
 use Hyperf\Database\Schema\Schema as DatabaseSchema;
-use Hyperf\Context\ApplicationContext;
 
 class Schema extends DatabaseSchema
 {

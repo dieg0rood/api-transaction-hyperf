@@ -1,6 +1,14 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace App\ValueObject;
 
@@ -10,23 +18,24 @@ class Amount
 {
     private int $amount;
 
-    public function __construct(int $amount) {
+    public function __construct(int $amount)
+    {
         $this->amount = $amount;
     }
 
     public static function fromDecimal($amount): Amount
     {
-        if (!is_float($amount)) {
+        if (! is_float($amount)) {
             throw new InvalidAmountFormatException();
         }
         $amount = round($amount * 100);
 
-        return new Amount((int)$amount);
+        return new Amount((int) $amount);
     }
 
     public static function fromInteger($amount): Amount
     {
-        if (!is_integer($amount)) {
+        if (! is_integer($amount)) {
             throw new InvalidAmountFormatException();
         }
         return new Amount($amount);
@@ -39,7 +48,7 @@ class Amount
 
     public function toFloat(): float
     {
-        return (float)number_format($this->amount/100, 2, '.', '');
+        return (float) number_format($this->amount / 100, 2, '.', '');
     }
 
     public function toMoney(): string
@@ -58,6 +67,7 @@ class Amount
         $this->amount += $amount->toInt();
         return $this;
     }
+
     public function isNegative(): bool
     {
         return $this->amount < 0;

@@ -1,6 +1,14 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace App\Service;
 
@@ -13,7 +21,8 @@ readonly class WalletService
 {
     public function __construct(
         private WalletRepositoryInterface $walletRepository
-    ){}
+    ) {
+    }
 
     public function withdraw(UserEntity $user, Amount $amount): bool
     {
@@ -26,6 +35,7 @@ readonly class WalletService
 
         return $this->walletRepository->updateBalance($wallet, $balance);
     }
+
     public function deposit(UserEntity $user, Amount $amount): bool
     {
         $wallet = $this->walletRepository->getByUserId($user->getId());
@@ -33,5 +43,4 @@ readonly class WalletService
 
         return $this->walletRepository->updateBalance($wallet, $balance);
     }
-
 }

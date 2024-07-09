@@ -1,18 +1,28 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace App\Entity;
 
 use App\ValueObject\Amount;
 
-readonly class TransactionEntity {
+readonly class TransactionEntity
+{
     public function __construct(
         private string $transactionId,
         private string $senderId,
         private string $receiverId,
         private Amount $value
-    ) {}
+    ) {
+    }
 
     public function getId(): string
     {
@@ -33,5 +43,4 @@ readonly class TransactionEntity {
     {
         return $this->senderId;
     }
-
 }

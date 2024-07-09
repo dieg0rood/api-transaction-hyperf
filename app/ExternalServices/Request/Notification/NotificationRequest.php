@@ -1,6 +1,14 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace App\ExternalServices\Request\Notification;
 
@@ -11,9 +19,11 @@ use Swoole\Http\Status;
 
 class NotificationRequest extends AbstractRequest
 {
-    const SERVICE_ROUTE = 'notify';
+    public const SERVICE_ROUTE = 'notify';
 
-    public function __construct(private StdoutLoggerInterface $logger){}
+    public function __construct(private StdoutLoggerInterface $logger)
+    {
+    }
 
     public function notify($params): void
     {

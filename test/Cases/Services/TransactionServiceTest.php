@@ -1,6 +1,14 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace HyperfTest\Cases\Services;
 
@@ -10,6 +18,7 @@ use App\Service\TransactionService;
 use App\ValueObject\Amount;
 use Faker\Factory;
 use HyperfTest\Cases\AbstractTest;
+
 use function Hyperf\Support\make;
 
 /**
@@ -19,6 +28,7 @@ use function Hyperf\Support\make;
 class TransactionServiceTest extends AbstractTest
 {
     private TransactionService $transactionService;
+
     public function setUp(): void
     {
         $this->transactionService = make(TransactionService::class);
@@ -27,17 +37,7 @@ class TransactionServiceTest extends AbstractTest
         parent::setUp();
     }
 
-    private function UserEntity(User $user): UserEntity
-    {
-        return new UserEntity(
-            userId:     $user->id->toString(),
-            fullName:   $user->full_name,
-            email:      $user->email,
-            type:       $user->type
-        );
-    }
-
-    public function  testCreateWithSuccess()
+    public function testCreateWithSuccess()
     {
         $this->makePersonalUser(10000, 'sender');
         $senderEntity = $this->userEntity($this->sender);
@@ -50,13 +50,23 @@ class TransactionServiceTest extends AbstractTest
         );
 
         $transaction = $this->transactionService->create(
-            sender:     $senderEntity,
-            receiver:   $receiverEntity,
-            amount:     $amount
+            sender: $senderEntity,
+            receiver: $receiverEntity,
+            amount: $amount
         );
 
         $this->assertEquals($senderEntity->getId(), $transaction->getSenderId());
         $this->assertEquals($receiverEntity->getId(), $transaction->getReceiverId());
         $this->assertEquals($amount->toInt(), $transaction->getValue()->toInt());
+    }
+
+    private function UserEntity(User $user): UserEntity
+    {
+        return new UserEntity(
+            userId: $user->id->toString(),
+            fullName: $user->full_name,
+            email: $user->email,
+            type: $user->type
+        );
     }
 }

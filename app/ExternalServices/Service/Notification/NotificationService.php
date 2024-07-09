@@ -1,6 +1,14 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace App\ExternalServices\Service\Notification;
 
@@ -12,7 +20,9 @@ use App\ValueObject\Amount;
 
 class NotificationService implements NotificationServiceInterface
 {
-    public function __construct(private NotificationRequest $request){}
+    public function __construct(private NotificationRequest $request)
+    {
+    }
 
     public function notifyTransfer(UserEntity $sender, UserEntity $receiver, Amount $amount): void
     {
@@ -21,12 +31,12 @@ class NotificationService implements NotificationServiceInterface
 
         $this->notify([
             'message' => $messageToSender,
-            'to' => $sender->getEmail()
+            'to' => $sender->getEmail(),
         ]);
 
         $this->notify([
             'message' => $messageToReceiver,
-            'to' => $receiver->getEmail()
+            'to' => $receiver->getEmail(),
         ]);
     }
 

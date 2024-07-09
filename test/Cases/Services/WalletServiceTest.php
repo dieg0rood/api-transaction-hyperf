@@ -1,6 +1,14 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 
 namespace HyperfTest\Cases\Services;
 
@@ -10,8 +18,9 @@ use App\Exception\Wallet\InsufficientWalletAmountException;
 use App\Model\User;
 use App\Service\WalletService;
 use App\ValueObject\Amount;
-use HyperfTest\Cases\AbstractTest;
 use Faker\Factory;
+use HyperfTest\Cases\AbstractTest;
+
 use function Hyperf\Support\make;
 
 /**
@@ -21,22 +30,13 @@ use function Hyperf\Support\make;
 class WalletServiceTest extends AbstractTest
 {
     private WalletService $walletService;
+
     public function setUp(): void
     {
         $this->walletService = make(WalletService::class);
         $this->faker = Factory::create();
 
         parent::setUp();
-    }
-
-    private function UserEntity(User $user): UserEntity
-    {
-        return new UserEntity(
-            userId:     $user->id->toString(),
-            fullName:   $user->full_name,
-            email:      $user->email,
-            type:       $user->type
-        );
     }
 
     public function testWithdrawWithSuccess()
@@ -112,7 +112,15 @@ class WalletServiceTest extends AbstractTest
         $this->expectException(WalletDataNotFoundException::class);
 
         $this->walletService->deposit($entity, $amount);
-
     }
 
+    private function UserEntity(User $user): UserEntity
+    {
+        return new UserEntity(
+            userId: $user->id->toString(),
+            fullName: $user->full_name,
+            email: $user->email,
+            type: $user->type
+        );
+    }
 }
