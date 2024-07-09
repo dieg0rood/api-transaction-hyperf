@@ -62,3 +62,12 @@ Para rodar os testes, rode o seguinte comando dentro do container
 
 Disponível em [OpenAPI](https://github.com/dieg0rood/api-transaction-hyperf/blob/main/doc/openapi.json)
 
+## Sripts Fixers
+
+```bash
+  docker run -it --rm -v $(pwd):/api-transaction-hyperf -w /api-transaction-hyperf jakzal/phpqa phpmd app text cleancode,codesize,controversial,design,naming,unusedcode
+```
+
+```bash
+  docker run -it --rm -v $(pwd):/api-transaction-hyperf ghcr.io/php-cs-fixer/php-cs-fixer:3.57-php8.2 fix /api-transaction-hyperf
+```
