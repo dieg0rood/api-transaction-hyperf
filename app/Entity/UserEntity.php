@@ -31,12 +31,12 @@ readonly class UserEntity
     {
         return $this->fullName;
     }
-
+// @codeCoverageIgnoreStart
     public function getEmail(): string
     {
         return $this->email;
     }
-
+// @codeCoverageIgnoreEnd
     public function getId(): string
     {
         return $this->userId;

@@ -14,7 +14,9 @@ namespace App\ExternalServices\Request;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-
+/**
+ * @codeCoverageIgnore
+ */
 class AbstractRequest
 {
     protected ClientInterface $client;

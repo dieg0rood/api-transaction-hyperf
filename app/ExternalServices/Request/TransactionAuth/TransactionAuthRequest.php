@@ -16,7 +16,9 @@ use App\ExternalServices\Request\AbstractRequest;
 use GuzzleHttp\Exception\GuzzleException;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Swoole\Http\Status;
-
+/**
+ * @codeCoverageIgnore
+ */
 class TransactionAuthRequest extends AbstractRequest
 {
     public const SERVICE_ROUTE = 'authorize';

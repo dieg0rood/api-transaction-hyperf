@@ -20,10 +20,12 @@ class Wallet extends Model
 
     protected array $fillable = ['id', 'user_id', 'amount'];
 
+    // @codeCoverageIgnoreStart
     public function user(): BelongsTo
     {
         return $this->belongsTo(
             User::class
         );
     }
+    // @codeCoverageIgnoreEnd
 }

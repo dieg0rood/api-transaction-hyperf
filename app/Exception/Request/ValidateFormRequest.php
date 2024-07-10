@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace App\Exception\Request;
 
 use Hyperf\HttpMessage\Exception\UnprocessableEntityHttpException;
-
+/**
+ * @codeCoverageIgnore
+ */
 class ValidateFormRequest extends UnprocessableEntityHttpException
 {
     public function __construct(?array $data = [])

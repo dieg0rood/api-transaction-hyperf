@@ -23,7 +23,6 @@ use function Hyperf\Support\make;
 
 /**
  * @internal
- * @coversNothing
  */
 class TransactionServiceTest extends AbstractTest
 {

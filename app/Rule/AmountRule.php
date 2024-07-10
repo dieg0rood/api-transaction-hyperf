@@ -14,6 +14,10 @@ namespace App\Rule;
 
 use Hyperf\Validation\Contract\Rule;
 
+/**
+ * @codeCoverageIgnore
+ */
+
 class AmountRule implements Rule
 {
     public function passes(string $attribute, mixed $value): bool

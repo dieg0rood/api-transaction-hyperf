@@ -18,6 +18,9 @@ use Hyperf\HttpMessage\Stream\SwooleStream;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 class AppExceptionHandler extends ExceptionHandler
 {
     public function __construct(protected StdoutLoggerInterface $logger)

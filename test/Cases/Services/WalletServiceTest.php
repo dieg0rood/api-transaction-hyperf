@@ -25,7 +25,6 @@ use function Hyperf\Support\make;
 
 /**
  * @internal
- * @coversNothing
  */
 class WalletServiceTest extends AbstractTest
 {

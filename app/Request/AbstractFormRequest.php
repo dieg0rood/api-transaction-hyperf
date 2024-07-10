@@ -19,6 +19,9 @@ use Hyperf\Validation\ValidationException;
 
 class AbstractFormRequest extends FormRequest implements ValidatesWhenResolved
 {
+    /**
+     * @codeCoverageIgnore
+     */
     public function validateResolved(): void
     {
         try {

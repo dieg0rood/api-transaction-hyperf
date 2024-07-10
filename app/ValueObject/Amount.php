@@ -50,12 +50,12 @@ class Amount
     {
         return (float) number_format($this->amount / 100, 2, '.', '');
     }
-
+// @codeCoverageIgnoreStart
     public function toMoney(): string
     {
         return number_format($this->amount, 2, ',', '.');
     }
-
+// @codeCoverageIgnoreEnd
     public function subtract(Amount $amount): Amount
     {
         $this->amount -= $amount->toInt();

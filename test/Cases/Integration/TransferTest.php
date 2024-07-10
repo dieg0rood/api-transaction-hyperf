@@ -20,7 +20,6 @@ use Swoole\Http\Status;
 
 /**
  * @internal
- * @coversNothing
  */
 class TransferTest extends AbstractTest
 {

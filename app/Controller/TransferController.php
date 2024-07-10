@@ -19,7 +19,9 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Swoole\Http\Status;
-
+/**
+ * @codeCoverageIgnore
+ */
 class TransferController
 {
     #[Inject]

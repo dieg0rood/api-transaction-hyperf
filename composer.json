@@ -76,6 +76,7 @@
         ],
         "test": "co-phpunit --prepend test/bootstrap.php -c phpunit.xml --colors=always",
         "test-method": "co-phpunit --prepend test/bootstrap.php -c phpunit.xml --colors=always --filter",
+        "xdebug-coverage" : "XDEBUG_MODE=coverage ./vendor/bin/co-phpunit --prepend test/bootstrap.php --coverage-html=runtime  --coverage-filter=app/",
         "test-coverage": "phpdbg82 -qrr ./vendor/bin/co-phpunit --prepend test/bootstrap.php -c phpunit.xml --colors=always",
         "cs-fix": "php-cs-fixer fix $1",
         "analyse": "phpstan analyse --memory-limit 300M -l 0 -c phpstan.neon ./app ./config",

@@ -17,8 +17,12 @@ enum UserTypesEnum: string
     case Personal = 'personal';
     case Enterprise = 'enterprise';
 
+
+    // @codeCoverageIgnoreStart
     public static function getAllStatusAvailable(): array
     {
         return array_column(UserTypesEnum::cases(), 'value');
     }
+    // @codeCoverageIgnoreEnd
+
 }

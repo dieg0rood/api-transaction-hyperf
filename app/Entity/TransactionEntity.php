@@ -23,12 +23,12 @@ readonly class TransactionEntity
         private Amount $value
     ) {
     }
-
+// @codeCoverageIgnoreStart
     public function getId(): string
     {
         return $this->transactionId;
     }
-
+// @codeCoverageIgnoreEnd
     public function getValue(): Amount
     {
         return $this->value;

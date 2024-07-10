@@ -31,7 +31,6 @@ use Mockery;
 
 /**
  * @internal
- * @coversNothing
  */
 abstract class AbstractTest extends TestCase
 {

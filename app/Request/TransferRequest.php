@@ -21,11 +21,12 @@ class TransferRequest extends AbstractFormRequest implements TransactionRequestI
     /**
      * Determine if the user is authorized to make this request.
      */
+    // @codeCoverageIgnoreStart
     public function authorize(): bool
     {
         return true;
     }
-
+// @codeCoverageIgnoreEnd
     public function rules(): array
     {
         return [

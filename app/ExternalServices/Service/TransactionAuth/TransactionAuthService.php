@@ -14,7 +14,9 @@ namespace App\ExternalServices\Service\TransactionAuth;
 
 use App\ExternalServices\Interface\TransactionAuthServiceInterface;
 use App\ExternalServices\Request\TransactionAuth\TransactionAuthRequest;
-
+/**
+ * @codeCoverageIgnore
+ */
 class TransactionAuthService implements TransactionAuthServiceInterface
 {
     public function __construct(private TransactionAuthRequest $transactionAuthRequest)

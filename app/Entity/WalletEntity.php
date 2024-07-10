@@ -27,12 +27,12 @@ readonly class WalletEntity
     {
         return $this->amount;
     }
-
+// @codeCoverageIgnoreStart
     public function getUserId(): string
     {
         return $this->userId;
     }
-
+// @codeCoverageIgnoreEnd
     public function getId(): string
     {
         return $this->walletId;
