@@ -52,10 +52,16 @@ Onde possível também utilizei da [Injeção de dependencias](https://en.wikipe
 
 ## Testes
 
-Para rodar os testes, rode o seguinte comando dentro do container
+Para rodar os testes, o comando é:
 
 ```bash
   composer test
+```
+
+Para rodar o coverage, o comando é:
+
+```bash
+  composer xdebug-coverage
 ```
 
 ## Documentação
