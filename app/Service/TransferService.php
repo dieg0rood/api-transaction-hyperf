@@ -22,14 +22,14 @@ use App\Exception\Wallet\InsufficientWalletAmountException;
 use App\ExternalServices\Interface\NotificationServiceInterface;
 use App\ExternalServices\Interface\TransactionAuthServiceInterface;
 use App\Interface\Repository\RepositoryInterface;
-use App\Repository\UserRepository;
+use App\Interface\Repository\UserRepositoryInterface;
 use App\ValueObject\Amount;
 use Exception;
 
 class TransferService
 {
     public function __construct(
-        private UserRepository $userRepository,
+        private UserRepositoryInterface $userRepository,
         private TransactionAuthServiceInterface $authService,
         private RepositoryInterface $repository,
         private WalletService $walletService,
